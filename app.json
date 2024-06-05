@@ -1,0 +1,46 @@
+{
+  "expo": {
+    "name": "chefheaven",
+    "owner": "aniket0829",
+    "slug": "chefheaven",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "extra": {
+      "googleClientId": "YOUR_GOOGLE_CLIENT_ID",
+      "eas": {
+        "projectId": "42e6aedb-774b-4446-9688-bdc95a811086"
+      }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Montserrat/static/Montserrat-Regular.ttf"
+          ]
+        }
+      ]
+    ],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.aniket0829.chefheaven"
+    },
+    "web": {
+      "favicon": "./assets/chefHeaven/Chef Logo 2.png"
+    },
+    "scheme": "chefhavn"
+  }
+}
