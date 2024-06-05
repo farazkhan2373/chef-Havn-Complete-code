@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "chefheaven",
-    "owner": "aniket0829",
-    "slug": "chefheaven",
+    "owner": "dev_services_chefhavn",
+    "slug": "chef-havn",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,7 +10,7 @@
     "extra": {
       "googleClientId": "YOUR_GOOGLE_CLIENT_ID",
       "eas": {
-        "projectId": "42e6aedb-774b-4446-9688-bdc95a811086"
+        "projectId": "08bf1335-23a0-47ef-acbd-38933e7d69c3"
       }
     },
     "plugins": [
