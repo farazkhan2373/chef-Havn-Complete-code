@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Colors from "../../utils/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -54,31 +47,25 @@ export default function Header() {
 
   return (
     <View style={styles.container}>
-      {/* Profile */}
       <View style={styles.profileMain}>
         <TouchableOpacity
           style={styles.locationContainer}
-          onPress={() =>
-            navigation.navigate("Map", { onLocationSelect: handleLocationSelect })
-          }
+          onPress={() => navigation.navigate("SelectLocation", { onLocationSelect: handleLocationSelect })}
         >
           <MaterialIcons name="location-on" size={24} color="white" />
           <View style={styles.locationTextContainer}>
             <Text style={styles.locationText}>{city}</Text>
-            {
-              mainLocation && (
-                <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.mainLocationScroll}
-            >
-              <Text style={styles.mainLocationText}>{mainLocation}</Text>
-            </ScrollView>
-              )
-            }
+            {mainLocation && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.mainLocationScroll}
+              >
+                <Text style={styles.mainLocationText}>{mainLocation}</Text>
+              </ScrollView>
+            )}
           </View>
         </TouchableOpacity>
-        {/* Settings Icon */}
         <TouchableOpacity
           style={styles.settingsContainer}
           onPress={() => navigation.navigate("Profile")}
@@ -86,8 +73,6 @@ export default function Header() {
           <MaterialIcons name="menu" size={24} color="white" />
         </TouchableOpacity>
       </View>
-
-      {/* Search Bar */}
     </View>
   );
 }

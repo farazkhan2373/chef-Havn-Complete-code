@@ -23,6 +23,7 @@ import { FontAwesome, FontAwesome6, MaterialIcons, FontAwesome5 } from '@expo/ve
 import Colors from './utils/Colors.js';
 import Terms from './screens/ProfileScreen/TermsScreen.jsx';
 import Privacy from './screens/ProfileScreen/PrivacyScreen.jsx';
+import SelectLocation from './screens/MapScreen/SelectLocation.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,10 +38,10 @@ const TabNavigator = () => (
       options={{
         headerShown: false,
         tabBarLabel: ({ color }) => (
-          <Text style={{ color: color }}>{color === Colors.PRIMARY ? 'Home' : 'Home'}</Text>
+          <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'Home' : 'Home'}</Text>
         ),
         tabBarIcon: ({ color, size }) => (
-          <FontAwesome5 name="home" size={24} color={color} />
+          <FontAwesome5 name="home" size={18} color={color} />
         )
       }}
     />
@@ -50,10 +51,10 @@ const TabNavigator = () => (
       options={{
         headerShown: false,
         tabBarLabel: ({ color }) => (
-          <Text style={{ color: color }}>{color === Colors.PRIMARY ? 'My Orders' : 'My Orders'}</Text>
+          <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'My Orders' : 'My Orders'}</Text>
         ),
         tabBarIcon: ({ color, size }) => (
-          <FontAwesome5 name="shopping-bag" size={24} color={color} />
+          <FontAwesome5 name="shopping-bag" size={18} color={color} />
         )
       }}
     />
@@ -63,10 +64,10 @@ const TabNavigator = () => (
       options={{
         headerShown: false,
         tabBarLabel: ({ color }) => (
-          <Text style={{ color: color }}>{color === Colors.PRIMARY ? 'Profile' : 'Profile'}</Text>
+          <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'Profile' : 'Profile'}</Text>
         ),
         tabBarIcon: ({ color, size }) => (
-          <FontAwesome5 name="user" size={24} color={color} />
+          <FontAwesome5 name="user" size={18} color={color} />
         )
       }}
     />
@@ -91,6 +92,7 @@ const App = () => {
         <Stack.Screen name="Privacy" component={withBackground(Privacy)} options={{ headerShown: true }} />
         <Stack.Screen name="Help" component={withBackground(HelpScreen)} options={{ headerShown: true }} />
         <Stack.Screen name="Map" component={withBackground(MapScreen)} />
+        <Stack.Screen name="SelectLocation" component={SelectLocation} />
         <Stack.Screen name="EditProfile" component={withBackground(EditProfile)} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
