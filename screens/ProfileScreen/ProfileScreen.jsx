@@ -1,6 +1,5 @@
-// ProfileScreen.js
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from "react-native";
 import Colors from "../../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -25,9 +24,24 @@ export default function ProfileScreen() {
   }, []);
 
   const handleLogout = async () => {
-    // Implement logout logic
-    await AsyncStorage.removeItem("user");
-    navigation.navigate("Welcome");
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Logout",
+          onPress: async () => {
+            await AsyncStorage.removeItem("user");
+            navigation.navigate("Welcome");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (

@@ -141,17 +141,21 @@ const Signup = ({ onSignup, onSwitchToLogin }) => {
           <View style={styles.socialButtonsContainer}>
             <TouchableOpacity style={[styles.socialButton, styles.googleButton]}>
               <FontAwesome name="google" size={24} color="white" />
-              <Text style={styles.buttonText}> Google</Text>
+              {/* <Text style={styles.buttonText}> Google</Text> */}
             </TouchableOpacity>
             <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
               <FontAwesome name="apple" size={24} color="white" />
-              <Text style={styles.buttonText}> Apple</Text>
+              {/* <Text style={styles.buttonText}> Apple</Text> */}
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity onPress={onSwitchToLogin} style={styles.loginLink}>
-            <Text style={styles.linkText}>Already have an account? Login</Text>
+            <Text style={styles.linkText}>Already have an account?
+
+            <Text style={{ color: '#503A73', fontWeight: '600' }}> Login</Text>
+            </Text>
           </TouchableOpacity>
+
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -228,15 +232,14 @@ const styles = StyleSheet.create({
   },
   socialButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
   },
   socialButton: {
-    flex: 1,
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
+    height: 50,
+    width: 50,
+    borderRadius: 25,
     justifyContent: 'center',
+    alignItems: 'center',
     marginHorizontal: 5,
   },
   googleButton: {
@@ -252,11 +255,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   linkText: {
-    color: '#503A73',
     fontSize: 16,
   },
   loginLink: {
-    marginTop: 30,
+    marginTop: 15,
     alignItems: 'center',
   },
 });

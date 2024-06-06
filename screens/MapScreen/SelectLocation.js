@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../utils/Colors';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 
 export default function SelectLocation({ route }) {
   const navigation = useNavigation();
@@ -20,12 +21,7 @@ export default function SelectLocation({ route }) {
           if (userData.addresses && userData.addresses.length > 0) {
             setSavedAddresses(userData.addresses);
           } else {
-            // If no saved addresses, set dummy addresses
-            setSavedAddresses([
-              { address: "Address 1" },
-              { address: "Address 2" },
-              { address: "Address 3" },
-            ]);
+            setSavedAddresses([]);
           }
         }
       } catch (error) {
@@ -63,31 +59,61 @@ export default function SelectLocation({ route }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search saved addresses"
-        value={search}
-        onChangeText={handleSearch}
-      />
-      <FlatList
-        data={savedAddresses}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity style={styles.addressItem} onPress={() => {
-            onLocationSelect(item);
-            navigation.goBack();
-          }}>
-            <Text>{item.addressType}</Text>
-            <Text>{item.nearbyLandmark}</Text>
-          </TouchableOpacity>
-        )}
-      />
-      <TouchableOpacity style={styles.currentLocationButton} onPress={handleCurrentLocation}>
-        <Text style={styles.currentLocationText}>Use Current Location</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.addAddressButton} onPress={handleAddAddress}>
-        <Text style={styles.addAddressText}>Add Address</Text>
-      </TouchableOpacity>
+      <View style={styles.searchBox}>
+        <FontAwesome name="search" size={20} color={Colors.PRIMARY} style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search saved addresses"
+          value={search}
+          onChangeText={handleSearch}
+        />
+      </View>
+      <View style={styles.optionsBox}>
+        <TouchableOpacity style={styles.optionItem} onPress={handleCurrentLocation}>
+          <MaterialIcons name="gps-fixed" size={24} color={Colors.PRIMARY} />
+          <View style={styles.optionTextContainer}>
+            <Text style={styles.optionText}>Use Current Location</Text>
+            <Text style={styles.subText}>Current location</Text>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.separator} />
+        <TouchableOpacity style={styles.optionItem} onPress={handleAddAddress}>
+          <FontAwesome name="plus" size={24} color={Colors.PRIMARY} />
+          <View style={styles.optionTextContainer}>
+            <Text style={styles.optionText}> Add Address</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.savedAddressHeader}>Saved Addresses</Text>
+      {savedAddresses.length > 0 ? (
+        <FlatList
+          data={savedAddresses}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.addressItem} onPress={() => {
+              onLocationSelect(item);
+              navigation.goBack();
+            }}>
+              <View style={styles.addressIcon}>
+                {item.addressType === 'Home' ? (
+                  <FontAwesome name="home" size={24} color={Colors.PRIMARY} />
+                ) : (
+                  <FontAwesome name="user" size={24} color={Colors.PRIMARY} />
+                )}
+              </View>
+              <View style={styles.addressTextContainer}>
+                <Text style={styles.addressType}>{item.addressType}</Text>
+                <Text style={styles.nearbyLandmark}>{item.nearbyLandmark}</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      ) : (
+        <View style={styles.noAddressContainer}>
+          <Text style={styles.noAddressText}>No address found</Text>
+          <FontAwesome name="exclamation-circle" size={40} color="gray" />
+        </View>
+      )}
     </View>
   );
 }
@@ -96,41 +122,97 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#f5f5f5',
+  },
+  searchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  searchIcon: {
+    marginRight: 10,
   },
   searchInput: {
+    flex: 1,
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
+  },
+  optionsBox: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
     marginBottom: 20,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 3,
+  },
+  optionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+  },
+  optionTextContainer: {
+    marginLeft: 10,
+  },
+  optionText: {
+    fontSize: 16,
+    color: Colors.PRIMARY,
+  },
+  subText: {
+    fontSize: 12,
+    color: 'gray',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginVertical: 10,
+  },
+  savedAddressHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   addressItem: {
-    padding: 15,
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    color: 'black'
-  },
-  currentLocationButton: {
-    marginTop: 20,
-    backgroundColor: 'blue',
-    padding: 15,
-    borderRadius: 5,
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 3,
   },
-  currentLocationText: {
-    color: 'white',
+  addressIcon: {
+    marginRight: 15,
+  },
+  addressTextContainer: {
+    flex: 1,
+  },
+  addressType: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
-  addAddressButton: {
-    marginTop: 20,
-    backgroundColor: 'green',
-    padding: 15,
-    borderRadius: 5,
+  nearbyLandmark: {
+    fontSize: 14,
+    color: 'gray',
+  },
+  noAddressContainer: {
     alignItems: 'center',
+    marginTop: 50,
   },
-  addAddressText: {
-    color: "white",
+  noAddressText: {
     fontSize: 16,
+    color: 'gray',
+    marginBottom: 10,
   },
 });

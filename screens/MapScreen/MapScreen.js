@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import * as Location from 'expo-location';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BottomSheet } from 'react-native-elements';
+import { MaterialIcons, FontAwesome } from '@expo/vector-icons';
+import Colors from '../../utils/Colors';
 
 export default function MapScreen({ navigation, route }) {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -174,15 +176,17 @@ export default function MapScreen({ navigation, route }) {
         style={styles.currentLocationButton}
         onPress={handleCurrentLocation}
       >
-        <Text style={styles.currentLocationButtonText}>Current Location</Text>
+        <MaterialIcons name="gps-fixed" size={24} color="white" />
       </TouchableOpacity>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity
-          style={styles.addAddressButton}
-          onPress={() => setDrawerVisible(true)}
-        >
-          <Text style={styles.addAddressButtonText}>Add Additional Address</Text>
-        </TouchableOpacity>
+        <View style={styles.bottomBox}>
+          <TouchableOpacity
+            style={styles.addDetailsButton}
+            onPress={() => setDrawerVisible(true)}
+          >
+            <Text style={styles.addDetailsButtonText}>Add More Details</Text>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity
           style={styles.confirmButton}
           onPress={handleConfirmLocation}
@@ -200,7 +204,7 @@ export default function MapScreen({ navigation, route }) {
             style={styles.closeButton}
             onPress={() => setDrawerVisible(false)}
           >
-            <Text style={styles.closeButtonText}>Close</Text>
+            <MaterialIcons name="close" size={24} color="white" />
           </TouchableOpacity>
           <ScrollView>
             <TextInput
@@ -235,7 +239,7 @@ export default function MapScreen({ navigation, route }) {
               onChangeText={setAreaLocality}
             />
             <View style={styles.addressTypeContainer}>
-              {['Home', 'Work', 'Other'].map((type) => (
+              {['Home', 'Other'].map((type) => (
                 <TouchableOpacity
                   key={type}
                   style={[
@@ -294,40 +298,54 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 70,
     right: 20,
-    backgroundColor: 'blue',
+    backgroundColor: Colors.PRIMARY,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 50,
     zIndex: 1,
-  },
-  currentLocationButtonText: {
-    color: 'white',
-    fontSize: 16,
   },
   bottomContainer: {
     position: 'absolute',
-    bottom: 20,
-    left: 0,
-    right: 0,
+    bottom: 0,
+    width: '100%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 50,
+    borderTopRightRadius: 50,
     alignItems: 'center',
   },
-  addAddressButton: {
-    backgroundColor: 'green',
+  bottomBox: {
+    width: '100%',
+    alignItems: 'center',
+    padding: 20,
+  },
+  locationInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  locationText: {
+    marginLeft: 10,
+    fontSize: 16,
+  },
+  addDetailsButton: {
+    backgroundColor: Colors.PRIMARY,
     padding: 10,
     borderRadius: 5,
-    marginBottom: 10,
-    width: '90%',
+    width: '100%',
     alignItems: 'center',
+    // marginVertical: 10,
   },
-  addAddressButtonText: {
+  addDetailsButtonText: {
     color: 'white',
     fontSize: 16,
   },
   confirmButton: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.PRIMARY,
     padding: 10,
     borderRadius: 5,
-    width: '90%',
+    width: '100%',
     alignItems: 'center',
+    marginVertical: 10,
   },
   confirmButtonText: {
     color: 'white',
@@ -343,9 +361,10 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     alignSelf: 'flex-end',
-    backgroundColor: 'red',
+    backgroundColor: Colors.PRIMARY,
     padding: 5,
     borderRadius: 5,
+    marginBottom: 10,
   },
   closeButtonText: {
     color: 'white',
@@ -360,7 +379,7 @@ const styles = StyleSheet.create({
   },
   addressTypeContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flext-start',
     marginBottom: 10,
   },
   addressTypeButton: {
@@ -368,18 +387,19 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
+    marginRight: 10
   },
   selectedAddressTypeButton: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.DARK_GOLD,
   },
   addressTypeText: {
     color: 'white',
   },
   selectedAddressTypeText: {
-    color: 'black',
+    color: 'white',
   },
   saveButton: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.PRIMARY,
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',

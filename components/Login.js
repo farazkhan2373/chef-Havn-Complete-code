@@ -190,7 +190,9 @@ const Login = ({ navigation, onLogin, onSwitchToSignup }) => {
         </>
       )}
       <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
-        <Text style={styles.linkText}>Not a member? Register now</Text>
+        <Text style={styles.linkText}>
+          Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
+        </Text>
       </TouchableOpacity>
 
       {/* New section for horizontal bar and text */}
@@ -220,6 +222,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'center',
+    backgroundColor: '#fff'
   },
   title: {
     fontSize: 24,
@@ -263,13 +266,13 @@ const styles = StyleSheet.create({
   },
   socialButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginBottom: 20,
   },
   socialButton: {
-    flex: 1,
-    height: 40,
-    borderRadius: 5,
+    height: 50,
+    width: 50,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 5,
@@ -296,7 +299,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   linkText: {
-    color: '#503A73',
     fontSize: 16,
   },
   signupLink: {
