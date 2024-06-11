@@ -24,6 +24,7 @@ import Colors from './utils/Colors.js';
 import Terms from './screens/ProfileScreen/TermsScreen.jsx';
 import Privacy from './screens/ProfileScreen/PrivacyScreen.jsx';
 import SelectLocation from './screens/MapScreen/SelectLocation.js';
+import ReportSafetyIssue from './screens/ProfileScreen/ReportSafetyIssue.jsx';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +97,7 @@ const App = () => {
         <Stack.Screen name="EditProfile" component={withBackground(EditProfile)} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
+        <Stack.Screen name="ReportSafetyIssue" component={ReportSafetyIssue} />
       </Stack.Navigator>
     </NavigationContainer>
   );

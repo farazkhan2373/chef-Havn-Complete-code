@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, Linking } from "react-native";
 import Colors from "../../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -42,6 +42,10 @@ export default function ProfileScreen() {
       ],
       { cancelable: false }
     );
+  };
+
+  const handleOpenPlayStore = () => {
+    const url = "https://play.google.com/store/apps/details?id=com.example.earnybycooking";
   };
 
   return (
@@ -102,6 +106,18 @@ export default function ProfileScreen() {
         onPress={() => navigation.navigate("Help")}
       >
         <Text style={styles.optionText}>Help</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.option}
+        onPress={() => navigation.navigate("ReportSafetyIssue")}
+      >
+        <Text style={styles.optionText}>Report a Safety Issue</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.option}
+        onPress={handleOpenPlayStore}
+      >
+        <Text style={styles.optionText}>Earn by Cooking</Text>
       </TouchableOpacity>
       {userData && (
         <TouchableOpacity style={styles.option} onPress={handleLogout}>

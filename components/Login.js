@@ -15,6 +15,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
 import { useNavigation } from '@react-navigation/native';
+import PhoneInput from 'react-native-phone-number-input';
 
 const generateOTP = () => Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -27,6 +28,7 @@ const Login = ({ navigation, onLogin, onSwitchToSignup }) => {
   const [loginWithEmail, setLoginWithEmail] = useState(false);
   const [toggling, setToggling] = useState(false);
   const navigation1 = useNavigation();
+  const phoneInput = React.useRef(null);
 
   if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -51,12 +53,13 @@ const Login = ({ navigation, onLogin, onSwitchToSignup }) => {
         userDetails = data.user;
       } else {
         // Check if phone number exists
+        const phone = phoneInput.current?.getNumberAfterPossiblyEliminatingZero();
         const response = await fetch('https://chefhavn-backend.onrender.com/api/users/check-phone', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ phone: phoneNumber })
+          body: JSON.stringify({ phone: phone.phoneNumber })
         });
         const data = await response.json();
         userExists = data.exists;
@@ -158,12 +161,22 @@ const Login = ({ navigation, onLogin, onSwitchToSignup }) => {
       ) : (
         <>
           {!loginWithEmail ? (
-            <TextInput
-              style={styles.input}
-              placeholder="Phone Number"
-              value={phoneNumber}
-              onChangeText={setPhoneNumber}
-              keyboardType="phone-pad"
+            <PhoneInput
+              ref={phoneInput}
+              defaultValue={phoneNumber}
+              defaultCode="IN"
+              layout="first"
+              onChangeText={(text) => {
+                setPhoneNumber(text);
+              }}
+              onChangeFormattedText={(text) => {
+                setPhoneNumber(text);
+              }}
+              containerStyle={styles.phoneContainer}
+              textContainerStyle={styles.textInput}
+              textInputProps={{
+                maxLength: 10,
+              }}
             />
           ) : (
             <TextInput
@@ -305,6 +318,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     alignItems: 'center',
+  },
+  phoneContainer: {
+    width: '100%',
+    height: 50,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  textInput: {
+    paddingVertical: 0,
+    borderRadius: 5,
   },
   modalContainer: {
     flex: 1,

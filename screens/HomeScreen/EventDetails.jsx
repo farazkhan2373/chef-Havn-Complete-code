@@ -12,16 +12,19 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../utils/Colors";
+import { Picker } from '@react-native-picker/picker';
 
 const EventDetail = ({ route }) => {
   const navigation = useNavigation();
   const { event } = route.params;
   const [guestQuantity, setGuestQuantity] = useState("");
   const [numberOfHours, setNumberOfHours] = useState("");
+  const [numberOfPeople, setNumberOfPeople] = useState("");
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [mode, setMode] = useState("date");
-  const [price, setprice] = useState("")
+  const [price, setPrice] = useState("");
+  const [selectedType, setSelectedType] = useState("Veg");
 
   const priceBreakup = {
     2: { basicCookPrice: 599, professionalPrice: 899 },
@@ -81,7 +84,9 @@ const EventDetail = ({ route }) => {
       guestQuantity,
       date,
       numberOfHours,
-      price
+      price,
+      numberOfPeople,
+      selectedType
     });
   };
 
@@ -108,12 +113,26 @@ const EventDetail = ({ route }) => {
         <Text style={styles.description}>{event.description}</Text>
 
         <Text style={styles.inputLabel}>Number of Hours:</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={numberOfHours}
+            style={styles.picker}
+            onValueChange={(itemValue) => setNumberOfHours(itemValue)}
+          >
+            <Picker.Item label="Select hours" value="" />
+            {Array.from({ length: 9 }, (_, i) => i + 2).map((hour) => (
+              <Picker.Item key={hour} label={`${hour} hours`} value={`${hour}`} />
+            ))}
+          </Picker>
+        </View>
+
+        <Text style={styles.inputLabel}>Number of People:</Text>
         <TextInput
           style={styles.input}
-          value={numberOfHours}
-          onChangeText={setNumberOfHours}
+          value={numberOfPeople}
+          onChangeText={setNumberOfPeople}
           keyboardType="numeric"
-          placeholder="Enter number of Hours"
+          placeholder="Enter number of people"
         />
 
         <Text style={styles.inputLabel}>Number of Dishes:</Text>
@@ -122,8 +141,24 @@ const EventDetail = ({ route }) => {
           value={guestQuantity}
           onChangeText={setGuestQuantity}
           keyboardType="numeric"
-          placeholder="Enter number of Dishes"
+          placeholder="Enter number of dishes"
         />
+
+        <Text style={styles.inputLabel}>Type:</Text>
+        <View style={styles.typeContainer}>
+          <TouchableOpacity
+            style={[styles.typeOption, selectedType === "Veg" && styles.selectedTypeOption]}
+            onPress={() => setSelectedType("Veg")}
+          >
+            <Text style={styles.typeText}>Veg</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.typeOption, selectedType === "Non-Veg" && styles.selectedTypeOption]}
+            onPress={() => setSelectedType("Non-Veg")}
+          >
+            <Text style={styles.typeText}>Non-Veg</Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.dateTimeContainer}>
           <View style={styles.dateTimeInput}>
@@ -208,6 +243,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
   },
+  pickerContainer: {
+    borderColor: "#ccc",
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
+  },
+  picker: {
+    height: 40,
+    width: "100%",
+  },
   dateTimeContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -227,9 +272,26 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
   },
-  dateText: {
-    marginTop: 10,
-    fontSize: 16,
+  typeContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  typeOption: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 5,
+  },
+  selectedTypeOption: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  typeText: {
+    color: Colors.BLACK,
   },
   bookButton: {
     backgroundColor: "#503A73",
