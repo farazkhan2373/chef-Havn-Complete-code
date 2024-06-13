@@ -17,7 +17,7 @@ const SplashScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/chefHeaven/Chef Logo 2.png")} style={styles.logo} />
+      <Image source={require("../assets/chefHeaven/Chef-Logo-2.png")} style={styles.logo} />
       {/* <ActivityIndicator size="large" color={Colors.DARK_GOLD} style={styles.loader} /> */}
     </View>
   );

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList,Image } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../utils/Colors';
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+
+import EditImage from "../../assets/chefHeaven/edit.png";
+import DeleteImage from "../../assets/chefHeaven/delete.png";
 
 export default function SelectLocation({ route }) {
   const navigation = useNavigation();
@@ -105,6 +108,10 @@ export default function SelectLocation({ route }) {
                 <Text style={styles.addressType}>{item.addressType}</Text>
                 <Text style={styles.nearbyLandmark}>{item.nearbyLandmark}</Text>
               </View>
+              <View style={styles.addressActions}>
+              <Image source={EditImage} style={styles.actionIcon} />
+              <Image source={DeleteImage} style={styles.actionIcon} />
+            </View>
             </TouchableOpacity>
           )}
         />
@@ -147,7 +154,7 @@ const styles = StyleSheet.create({
   optionsBox: {
     backgroundColor: 'white',
     borderRadius: 10,
-    padding: 20,
+    padding: 10,
     marginBottom: 20,
     shadowColor: '#000',
     shadowOpacity: 0.1,
@@ -157,7 +164,7 @@ const styles = StyleSheet.create({
   optionItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 15,
+    paddingVertical: 5,
   },
   optionTextContainer: {
     marginLeft: 10,
@@ -214,5 +221,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
     marginBottom: 10,
+  },
+  addressActions: {
+    flexDirection: 'row',
+  },
+  actionIcon: {
+    width: 24,
+    height: 24,
+    marginLeft: 10,
   },
 });

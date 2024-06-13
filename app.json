@@ -5,7 +5,7 @@
     "slug": "chef-havn",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/chefHeaven/Chef Logo 2.png",
+    "icon": "./assets/chefHeaven/Chef-Logo-2.png",
     "userInterfaceStyle": "light",
     "extra": {
       "googleClientId": "YOUR_GOOGLE_CLIENT_ID",
@@ -39,7 +39,7 @@
       "package": "com.aniket0829.chefheaven"
     },
     "web": {
-      "favicon": "./assets/chefHeaven/Chef Logo 2.png"
+      "favicon": "./assets/chefHeaven/Chef-Logo-2.png"
     },
     "scheme": "chefhavn"
   }

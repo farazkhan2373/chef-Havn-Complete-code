@@ -4,17 +4,14 @@ import {
   Text,
   StyleSheet,
   FlatList,
-  Image,
-  TextInput,
-  Button,
-  Alert,
+  TouchableOpacity,
 } from "react-native";
 import Colors from "../../utils/Colors";
-import { AirbnbRating } from "react-native-ratings";
+import { useNavigation } from "@react-navigation/native";
 
 const dummyOrders = [
   {
-    orderId: "1",
+    orderId: "123456",
     chefName: "Chef John Doe",
     eventDate: "2024-06-15",
     eventType: "Wedding",
@@ -24,6 +21,7 @@ const dummyOrders = [
     contact: {
       phone: "123-456-7890",
       email: "johndoe@example.com",
+      address: "123 Main St, Springfield, IL",
     },
     menu: [
       "Caesar Salad",
@@ -35,7 +33,7 @@ const dummyOrders = [
     ],
   },
   {
-    orderId: "2",
+    orderId: "234567",
     chefName: "Chef Jane Smith",
     eventDate: "2024-07-10",
     eventType: "Birthday Party",
@@ -45,6 +43,7 @@ const dummyOrders = [
     contact: {
       phone: "987-654-3210",
       email: "janesmith@example.com",
+      address: "456 Elm St, Springfield, IL",
     },
     menu: [
       "Greek Salad",
@@ -56,7 +55,7 @@ const dummyOrders = [
     ],
   },
   {
-    orderId: "3",
+    orderId: "345678",
     chefName: "Chef Jane Smith",
     eventDate: "2024-07-10",
     eventType: "Birthday Party",
@@ -66,6 +65,7 @@ const dummyOrders = [
     contact: {
       phone: "987-654-3210",
       email: "janesmith@example.com",
+      address: "789 Pine St, Springfield, IL",
     },
     menu: [
       "Greek Salad",
@@ -80,92 +80,38 @@ const dummyOrders = [
 
 export default function MyOrdersScreen() {
   const [orders, setOrders] = useState([]);
-  const [reviews, setReviews] = useState({});
+  const navigation = useNavigation();
 
   useEffect(() => {
     // Simulate fetching data from an API or local storage
     setOrders(dummyOrders);
   }, []);
 
-  const handleReviewChange = (orderId, text) => {
-    setReviews((prevReviews) => ({
-      ...prevReviews,
-      [orderId]: { ...prevReviews[orderId], review: text },
-    }));
-  };
-
-  const handleRatingChange = (orderId, rating) => {
-    setReviews((prevReviews) => ({
-      ...prevReviews,
-      [orderId]: { ...prevReviews[orderId], rating: rating },
-    }));
-  };
-
-  const submitReview = (orderId) => {
-    const review = reviews[orderId];
-    if (review && review.review && review.rating) {
-      Alert.alert(
-        "Review Submitted",
-        `Review for order ${orderId} submitted successfully!`
-      );
-      // You can also add API call here to submit the review
-    } else {
-      Alert.alert(
-        "Incomplete Review",
-        "Please provide both rating and review."
-      );
-    }
-  };
-
   const renderItem = ({ item }) => (
     <View style={styles.orderItem}>
       <View style={styles.orderHeader}>
-        <Image
-          source={require("../../assets/chefHeaven/Chef Logo 2.png")}
-          style={styles.chefImage}
-        />
-        <View>
-          <Text style={styles.chefName}>{item.chefName}</Text>
-          <Text style={styles.eventType}>{item.eventType}</Text>
-          <Text style={styles.eventDate}>
-            {new Date(item.eventDate).toLocaleDateString()}
+        <View style={styles.priceContainer}>
+          <Text style={styles.price}>₹{item.totalCost}</Text>
+          <Text style={[styles.orderStatus, getStatusStyle(item.status)]}>
+            {item.status}
           </Text>
         </View>
+        <View style={styles.orderInfo}>
+          <Text style={styles.orderNumber}>Order #{item.orderId}</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("OrderDetails", { order: item })}
+          >
+            <Text style={styles.moreOptions}>⋮</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.orderBody}>
-        <Text style={styles.orderDetails}>Guests: {item.guests}</Text>
-        <Text style={styles.orderDetails}>Status: {item.status}</Text>
-        <Text style={styles.orderDetails}>Total Cost: ₹{item.totalCost}</Text>
-        <Text style={styles.orderDetails}>Phone: {item.contact.phone}</Text>
-        <Text style={styles.orderDetails}>Email: {item.contact.email}</Text>
-        {/* <View style={styles.menu}>
-          {item.menu.map((dish, index) => (
-            <Text key={index} style={styles.dish}>
-              - {dish}
-            </Text>
-          ))}
-        </View> */}
+      <View style={styles.locationContainer}>
+        <Text style={styles.locationLabel}>Chef Location</Text>
+        <Text style={styles.locationText}>{item.contact.address}</Text>
       </View>
-      <View style={styles.reviewSection}>
-        <AirbnbRating
-          count={5}
-          reviews={["Terrible", "Bad", "Okay", "Good", "Great"]}
-          defaultRating={0}
-          size={20}
-          onFinishRating={(rating) => handleRatingChange(item.orderId, rating)}
-        />
-        {/* <TextInput
-          style={styles.reviewInput}
-          placeholder="Write your review here..."
-          multiline
-          numberOfLines={3}
-          onChangeText={(text) => handleReviewChange(item.orderId, text)}
-          value={reviews[item.orderId]?.review || ''}
-        /> */}
-        <Button
-          title="Submit Review"
-          onPress={() => submitReview(item.orderId)}
-        />
+      <View style={styles.locationContainer}>
+        <Text style={styles.locationLabel}>Customer Location</Text>
+        <Text style={styles.locationText}>{item.contact.address}</Text>
       </View>
     </View>
   );
@@ -182,6 +128,21 @@ export default function MyOrdersScreen() {
   );
 }
 
+const getStatusStyle = (status) => {
+  switch (status) {
+    case "Confirmed":
+      return { backgroundColor: Colors.GREEN };
+    case "Pending":
+      return { backgroundColor: Colors.ORANGE };
+    case "Cancelled":
+      return { backgroundColor: Colors.RED };
+    case "Completed":
+      return { backgroundColor: Colors.BLUE };
+    default:
+      return { backgroundColor: Colors.GRAY };
+  }
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -193,12 +154,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     marginTop: 35,
-    color: Colors.primary,
+    color: Colors.PRIMARY,
   },
   orderItem: {
     padding: 15,
-    borderWidth: 1,
-    borderColor: Colors.LIGHT_GRAY,
     borderRadius: 8,
     marginBottom: 10,
     backgroundColor: Colors.WHITE,
@@ -207,71 +166,61 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 2,
   },
   orderHeader: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 10,
   },
-  chefImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
+  priceContainer: {
+    alignItems: "flex-start",
   },
-  chefName: {
-    fontSize: 18,
+  price: {
+    fontSize: 20,
     fontWeight: "bold",
     color: Colors.BLACK,
   },
-  eventType: {
-    fontSize: 16,
-    color: Colors.DARK_GRAY,
-  },
-  eventDate: {
+  orderStatus: {
+    marginTop: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 5,
+    color: Colors.WHITE,
+    textAlign: "center",
     fontSize: 14,
-    color: Colors.GRAY,
+    fontWeight: "bold",
   },
-  orderBody: {
-    marginTop: 10,
+  orderInfo: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  orderDetails: {
+  orderNumber: {
     fontSize: 16,
     color: Colors.DARK_GRAY,
+  },
+  moreOptions: {
+    fontSize: 24,
+    color: Colors.DARK_GRAY,
+    marginLeft: 10,
+  },
+  locationContainer: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: Colors.BACKGROUND,
+    borderRadius: 8,
+  },
+  locationLabel: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: Colors.PRIMARY,
     marginBottom: 5,
   },
-  menu: {
-    marginTop: 10,
-  },
-  dish: {
-    fontSize: 14,
+  locationText: {
+    fontSize: 16,
     color: Colors.DARK_GRAY,
-  },
-  reviewSection: {
-    marginTop: 20,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: Colors.LIGHT_GRAY,
-    borderRadius: 8,
-    backgroundColor: Colors.WHITE,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  reviewInput: {
-    borderWidth: 1,
-    borderColor: Colors.LIGHT_GRAY,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 10,
-    textAlignVertical: "top",
   },
 });

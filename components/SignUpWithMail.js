@@ -11,22 +11,23 @@ import {
   UIManager,
   Platform,
   Image,
-  Linking,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
 import { useNavigation } from '@react-navigation/native';
-import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import { MaterialIcons, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 
-const Login = ({ onLogin }) => {
+const generateOTP = () => Math.floor(1000 + Math.random() * 9000).toString();
+
+const SignUpWithMail = ({ navigation, onLogin, onSwitchToSignup }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loadingGuest, setLoadingGuest] = useState(false);
+  const [generatedOtp, setGeneratedOtp] = useState('');
   const [currentUser, setCurrentUser] = useState(null);
   const [loginWithEmail, setLoginWithEmail] = useState(false);
   const [toggling, setToggling] = useState(false);
-  const navigation = useNavigation();
+  const navigation1 = useNavigation();
 
   if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -37,7 +38,6 @@ const Login = ({ onLogin }) => {
     try {
       let userExists = false;
       let userDetails;
-
       if (loginWithEmail) {
         const response = await fetch('https://chefhavn-backend.onrender.com/api/users/check-email', {
           method: 'POST',
@@ -49,31 +49,8 @@ const Login = ({ onLogin }) => {
         const data = await response.json();
         userExists = data.exists;
         userDetails = data.user;
-
-        if (userExists) {
-          const otpResponse = await fetch('https://chefhavn-backend.onrender.com/api/send-otp', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email })
-          });
-          const otpData = await otpResponse.json();
-          const otp = otpData.otp;
-          setCurrentUser(userDetails);
-          Alert.alert('OTP Sent', `An OTP has been sent to your email`);
-          navigation.navigate('OtpScreen', {
-            generatedOtp: otp,
-            onOtpVerified: async () => {
-              await AsyncStorage.setItem('user', JSON.stringify(currentUser));
-              onLogin();
-            }
-          });
-        } else {
-          Alert.alert('Login Failed', 'Your email is not registered. Please register first.');
-        }
       } else {
-        const phone = `${phoneNumber}`;
+        const phone = `+91${phoneNumber}`;
         const response = await fetch('https://chefhavn-backend.onrender.com/api/users/check-phone', {
           method: 'POST',
           headers: {
@@ -84,22 +61,22 @@ const Login = ({ onLogin }) => {
         const data = await response.json();
         userExists = data.exists;
         userDetails = data.user;
+      }
 
-        if (userExists) {
-          const otp = generateOTP();
-          setGeneratedOtp(otp);
-          setCurrentUser(userDetails);
-          Alert.alert('OTP Sent', `An OTP has been sent to your phone number: ${otp}`);
-          navigation.navigate('OtpScreen', {
-            generatedOtp: otp,
-            onOtpVerified: async () => {
-              await AsyncStorage.setItem('user', JSON.stringify(currentUser));
-              onLogin();
-            }
-          });
-        } else {
-          Alert.alert('Login Failed', 'Your phone number is not registered. Please register first.');
-        }
+      if (userExists) {
+        const otp = generateOTP();
+        setGeneratedOtp(otp);
+        setCurrentUser(userDetails);
+        Alert.alert('OTP Sent', `An OTP has been sent to your ${loginWithEmail ? 'email' : 'phone number'}: ${otp}`);
+        navigation1.navigate('OtpScreen', {
+          generatedOtp: otp,
+          onOtpVerified: async () => {
+            await AsyncStorage.setItem('user', JSON.stringify(currentUser));
+            onLogin();
+          }
+        });
+      } else {
+        Alert.alert('Login Failed', `Your ${loginWithEmail ? 'email' : 'phone number'} is not registered. Please register first.`);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -110,9 +87,9 @@ const Login = ({ onLogin }) => {
   };
 
   const handleGuestLogin = () => {
-    setLoadingGuest(true);
+    setLoading(true);
     setTimeout(() => {
-      setLoadingGuest(false);
+      setLoading(false);
       onLogin();
     }, 2000);
   };
@@ -152,7 +129,7 @@ const Login = ({ onLogin }) => {
         email: user.email,
         phone: user.phoneNumber || '',
       };
-      await AsyncStorage.setItem('user', JSON.stringify(userToStore));
+      await AsyncStorage.setItem('user', JSON.parse(userToStore));
     } catch (error) {
       console.error(error);
     }
@@ -167,22 +144,10 @@ const Login = ({ onLogin }) => {
     }, 500);
   };
 
-  const navigateToSignupWithMain = () => {
-    navigation.navigate('SignupWithMain');
-  };
-
-  const handleTermsPress = () => {
-    navigation.navigate('Terms');
-  };
-
-  const handlePrivacyPress = () => {
-    navigation.navigate('Privacy');
-  };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
-        {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
+        {loading ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Continue as Guest</Text>}
       </TouchableOpacity>
       <Text style={styles.title}>Login</Text>
       {toggling ? (
@@ -231,7 +196,7 @@ const Login = ({ onLogin }) => {
           </TouchableOpacity>
         </>
       )}
-      <TouchableOpacity onPress={navigateToSignupWithMain} style={styles.signupLink}>
+      <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
         <Text style={styles.linkText}>
           Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
         </Text>
@@ -247,19 +212,13 @@ const Login = ({ onLogin }) => {
         <TouchableOpacity style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
           <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={navigateToSignupWithMain}>
-          <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
+        <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
+          <MaterialCommunityIcons name="google" size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
+        <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
           <Ionicons name="logo-apple" size={24} color="white" />
         </TouchableOpacity>
       </View>
-
-      <Text style={styles.termsText}>
-        By logging in you agree to our{' '}
-        <Text style={styles.link} onPress={handleTermsPress}>terms</Text> and{' '}
-        <Text style={styles.link} onPress={handlePrivacyPress}>privacy policy</Text>.
-      </Text>
     </View>
   );
 };
@@ -269,11 +228,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   title: {
-    fontSize: 16,
-    color: '#111',
+    fontSize: 24,
+    fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
   },
@@ -310,7 +269,7 @@ const styles = StyleSheet.create({
   separatorText: {
     marginHorizontal: 10,
     fontSize: 16,
-    color: '#111',
+    color: '#555',
   },
   socialButtonsContainer: {
     flexDirection: 'row',
@@ -329,10 +288,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#6a4d99"
   },
   googleButton: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#6a4d99',
-    borderRadius: 50,
+    backgroundColor: '#DB4437',
   },
   appleButton: {
     backgroundColor: '#000',
@@ -388,15 +344,6 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 50,
   },
-  termsText: {
-    marginTop: 20,
-    textAlign: 'center',
-    color: '#111',
-  },
-  link: {
-    color: '#503A73',
-    textDecorationLine: 'underline',
-  },
 });
 
-export default Login;
+export default SignUpWithMail;

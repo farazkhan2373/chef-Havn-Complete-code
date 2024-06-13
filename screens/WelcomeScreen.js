@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import Login from '../components/Login';
 import Signup from '../components/Signup';
-import ChefHeavenLogo from "../assets/chefHeaven/Chef Logo 2.png"
+import ChefHeavenLogo from "../assets/chefHeaven/Chef-Logo-2.png"
 
 const WelcomeScreen = ({ navigation }) => {
   const [isLogin, setIsLogin] = useState(true);

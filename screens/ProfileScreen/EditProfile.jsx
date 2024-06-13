@@ -1,4 +1,3 @@
-// SettingsScreen.jsx
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -8,21 +7,16 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { FontAwesome } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../utils/Colors";
 
 export default function EditProfile() {
   const [user, setUser] = useState(null);
-  const [isEditing, setIsEditing] = useState({
-    displayName: false,
-    email: false,
-    phone: false,
-  });
   const [editableUser, setEditableUser] = useState({
     displayName: "",
     email: "",
     phone: "",
+    password: "",
   });
 
   useEffect(() => {
@@ -35,6 +29,7 @@ export default function EditProfile() {
           displayName: parsedUser.name,
           email: parsedUser.email,
           phone: parsedUser.phone,
+          password: "", // Initial password field is empty
         });
       }
     };
@@ -42,16 +37,15 @@ export default function EditProfile() {
     fetchUser();
   }, []);
 
-  const handleSave = async (field) => {
+  const handleSave = async () => {
     const updatedUser = { ...user, ...editableUser };
     await AsyncStorage.setItem("user", JSON.stringify(updatedUser));
     setUser(updatedUser);
-    setIsEditing({ ...isEditing, [field]: false });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Settings</Text>
+      <Text style={styles.header}>Edit Profile</Text>
       {user && (
         <View style={styles.profileContainer}>
           <Image
@@ -62,73 +56,48 @@ export default function EditProfile() {
           />
           <View style={styles.fieldContainer}>
             <Text style={styles.label}>Name:</Text>
-            {isEditing.displayName ? (
-              <TextInput
-                style={styles.input}
-                value={editableUser.displayName}
-                onChangeText={(text) =>
-                  setEditableUser({ ...editableUser, displayName: text })
-                }
-                onBlur={() => handleSave("displayName")}
-              />
-            ) : (
-              <Text style={styles.value}>{user.name}</Text>
-            )}
-            <TouchableOpacity
-              onPress={() =>
-                setIsEditing({
-                  ...isEditing,
-                  displayName: !isEditing.displayName,
-                })
+            <TextInput
+              style={styles.input}
+              value={editableUser.displayName}
+              onChangeText={(text) =>
+                setEditableUser({ ...editableUser, displayName: text })
               }
-            >
-              <FontAwesome name="edit" size={24} color={Colors.primary} />
-            </TouchableOpacity>
+            />
           </View>
           <View style={styles.fieldContainer}>
             <Text style={styles.label}>Email:</Text>
-            {isEditing.email ? (
-              <TextInput
-                style={styles.input}
-                value={editableUser.email}
-                onChangeText={(text) =>
-                  setEditableUser({ ...editableUser, email: text })
-                }
-                onBlur={() => handleSave("email")}
-              />
-            ) : (
-              <Text style={styles.value}>{user.email}</Text>
-            )}
-            <TouchableOpacity
-              onPress={() =>
-                setIsEditing({ ...isEditing, email: !isEditing.email })
+            <TextInput
+              style={styles.input}
+              value={editableUser.email}
+              onChangeText={(text) =>
+                setEditableUser({ ...editableUser, email: text })
               }
-            >
-              <FontAwesome name="edit" size={24} color={Colors.primary} />
-            </TouchableOpacity>
+            />
           </View>
           <View style={styles.fieldContainer}>
             <Text style={styles.label}>Phone:</Text>
-            {isEditing.phone ? (
-              <TextInput
-                style={styles.input}
-                value={editableUser.phone}
-                onChangeText={(text) =>
-                  setEditableUser({ ...editableUser, phone: text })
-                }
-                onBlur={() => handleSave("phone")}
-              />
-            ) : (
-              <Text style={styles.value}>{user.phone}</Text>
-            )}
-            <TouchableOpacity
-              onPress={() =>
-                setIsEditing({ ...isEditing, phone: !isEditing.phone })
+            <TextInput
+              style={styles.input}
+              value={editableUser.phone}
+              onChangeText={(text) =>
+                setEditableUser({ ...editableUser, phone: text })
               }
-            >
-              <FontAwesome name="edit" size={24} color={Colors.primary} />
-            </TouchableOpacity>
+            />
           </View>
+          <View style={styles.fieldContainer}>
+            <Text style={styles.label}>Change Password:</Text>
+            <TextInput
+              style={styles.input}
+              value={editableUser.password}
+              onChangeText={(text) =>
+                setEditableUser({ ...editableUser, password: text })
+              }
+              secureTextEntry
+            />
+          </View>
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -147,38 +116,48 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 35,
     color: Colors.primary,
+    textAlign: "center",
   },
   profileContainer: {
     alignItems: "center",
   },
   profilePic: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: 20,
   },
   fieldContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
     width: "100%",
-    justifyContent: "space-between",
+    marginBottom: 20,
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
     color: Colors.DARK_GRAY,
-  },
-  value: {
-    fontSize: 16,
-    color: Colors.DARK_GRAY,
+    marginBottom: 5,
   },
   input: {
     fontSize: 16,
     color: Colors.DARK_GRAY,
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: Colors.LIGHT_GRAY,
-    flex: 1,
-    marginHorizontal: 10,
+    borderRadius: 5,
+    padding: 10,
+    width: "100%",
+  },
+  saveButton: {
+    backgroundColor: Colors.PRIMARY,
+    padding: 15,
+    borderRadius: 5,
+    alignItems: "center",
+    marginTop: 20,
+    width: "100%",
+  },
+  saveButtonText: {
+    color: Colors.WHITE,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
+

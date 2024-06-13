@@ -67,7 +67,7 @@ const CheckoutScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Checkout</Text>
+      <Text style={styles.heading}>Event Details</Text>
       <View style={styles.itemContainer}>
         <Text style={styles.label}>Event:</Text>
         <Text style={styles.value}>{event.name}</Text>
@@ -85,7 +85,7 @@ const CheckoutScreen = ({ route }) => {
         <Text style={styles.value}>{date.toLocaleDateString()}</Text>
       </View>
       <View style={styles.priceBreakdown}>
-        <Text style={styles.subHeading}>Price Summery</Text>
+        <Text style={styles.subHeading}>Price Breakup</Text>
         <View style={styles.priceItem}>
           <Text style={styles.priceLabel}>Cook:</Text>
           <Text style={styles.priceValue}>₹{cook.toFixed(2)}</Text>

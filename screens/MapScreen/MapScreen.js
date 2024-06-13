@@ -22,8 +22,8 @@ export default function MapScreen({ navigation, route }) {
   const [region, setRegion] = useState({
     latitude: 37.78825,
     longitude: -122.4324,
-    latitudeDelta: 0.005,
-    longitudeDelta: 0.005,
+    latitudeDelta: 0.002,
+    longitudeDelta: 0.002,
   });
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [receiverName, setReceiverName] = useState('');
@@ -60,8 +60,8 @@ export default function MapScreen({ navigation, route }) {
       setRegion({
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
-        latitudeDelta: 0.005,
-        longitudeDelta: 0.005,
+        latitudeDelta: 0.002,
+        longitudeDelta: 0.002,
       });
       setSelectedLocation({
         latitude: location.coords.latitude,
@@ -102,8 +102,8 @@ export default function MapScreen({ navigation, route }) {
     setRegion({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
-      latitudeDelta: 0.005,
-      longitudeDelta: 0.005,
+      latitudeDelta: 0.002,
+      longitudeDelta: 0.002,
     });
     setSelectedLocation({
       latitude: location.coords.latitude,
