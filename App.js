@@ -27,6 +27,7 @@ import SelectLocation from './screens/MapScreen/SelectLocation.js';
 import ReportSafetyIssue from './screens/ProfileScreen/ReportSafetyIssue.jsx';
 import OrderDetailsScreen from './screens/ProfileScreen/OrderDetailsScreen.jsx';
 import SignUpWithMail from './components/SignUpWithMail.js';
+import Signup from './components/Signup.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -106,7 +107,7 @@ const App = () => {
         <Stack.Screen name="SelectLocation" component={SelectLocation} />
         <Stack.Screen name="EditProfile" component={withBackground(EditProfile)} />
         <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUpWithMail" component={SignUpWithMail} />
+        <Stack.Screen name="Signup" component={Signup} />
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
         <Stack.Screen name="ReportSafetyIssue" component={ReportSafetyIssue} />
         <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} />

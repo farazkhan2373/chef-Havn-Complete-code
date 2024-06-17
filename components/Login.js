@@ -18,7 +18,7 @@ import * as Google from 'expo-auth-session/providers/google';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onSwitchToSignup }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -168,7 +168,7 @@ const Login = ({ onLogin }) => {
   };
 
   const navigateToSignupWithMain = () => {
-    navigation.navigate('SignupWithMain');
+    navigation.navigate('Signup');
   };
 
   const handleTermsPress = () => {
@@ -231,7 +231,7 @@ const Login = ({ onLogin }) => {
           </TouchableOpacity>
         </>
       )}
-      <TouchableOpacity onPress={navigateToSignupWithMain} style={styles.signupLink}>
+      <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
         <Text style={styles.linkText}>
           Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
         </Text>
@@ -247,7 +247,7 @@ const Login = ({ onLogin }) => {
         <TouchableOpacity style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
           <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={navigateToSignupWithMain}>
+        <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
           <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
         </TouchableOpacity>
         <TouchableOpacity style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
