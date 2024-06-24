@@ -181,14 +181,15 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
-        {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
-      </TouchableOpacity>
-      <Text style={styles.title}>Login</Text>
+
       {toggling ? (
         <ActivityIndicator size="large" color="#503A73" />
       ) : (
         <>
+          <TouchableOpacity style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
+            {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
+          </TouchableOpacity>
+          <Text style={styles.title}>Login</Text>
           {!loginWithEmail ? (
             <View style={styles.phoneContainer}>
               <View style={styles.flagContainer}>
@@ -229,37 +230,37 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
               </Text>
             )}
           </TouchableOpacity>
+          <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
+            <Text style={styles.linkText}>
+              Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.separatorContainer}>
+            <View style={styles.separator} />
+            <Text style={styles.separatorText}>Or continue with</Text>
+            <View style={styles.separator} />
+          </View>
+
+          <View style={styles.socialButtonsContainer}>
+            <TouchableOpacity style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
+              <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
+              <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
+              <Ionicons name="logo-apple" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.termsText}>
+            By logging in you agree to our{' '}
+            <Text style={styles.link} onPress={handleTermsPress}>terms</Text> and{' '}
+            <Text style={styles.link} onPress={handlePrivacyPress}>privacy policy</Text>.
+          </Text>
         </>
       )}
-      <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
-        <Text style={styles.linkText}>
-          Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
-        </Text>
-      </TouchableOpacity>
-
-      <View style={styles.separatorContainer}>
-        <View style={styles.separator} />
-        <Text style={styles.separatorText}>Or continue with</Text>
-        <View style={styles.separator} />
-      </View>
-
-      <View style={styles.socialButtonsContainer}>
-        <TouchableOpacity style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
-          <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
-          <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
-          <Ionicons name="logo-apple" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      <Text style={styles.termsText}>
-        By logging in you agree to our{' '}
-        <Text style={styles.link} onPress={handleTermsPress}>terms</Text> and{' '}
-        <Text style={styles.link} onPress={handlePrivacyPress}>privacy policy</Text>.
-      </Text>
     </View>
   );
 };
