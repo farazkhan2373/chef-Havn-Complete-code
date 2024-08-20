@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList,Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, FlatList, Image, Modal, Button } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Location from 'expo-location';
 import { useNavigation } from '@react-navigation/native';
@@ -14,6 +14,8 @@ export default function SelectLocation({ route }) {
   const { onLocationSelect } = route.params;
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [search, setSearch] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   useEffect(() => {
     const fetchSavedAddresses = async () => {
@@ -58,6 +60,27 @@ export default function SelectLocation({ route }) {
 
   const handleSearch = (text) => {
     setSearch(text);
+  };
+
+  const handleEditAddress = (address) => {
+    setSelectedAddress(address);
+    setModalVisible(true);
+  };
+
+  const handleSaveEdit = async () => {
+    const updatedAddresses = savedAddresses.map(addr => 
+      addr === selectedAddress ? selectedAddress : addr
+    );
+
+    setSavedAddresses(updatedAddresses);
+    const user = await AsyncStorage.getItem("user");
+    if (user) {
+      const userData = JSON.parse(user);
+      userData.addresses = updatedAddresses;
+      await AsyncStorage.setItem("user", JSON.stringify(userData));
+    }
+
+    setModalVisible(false);
   };
 
   return (
@@ -109,9 +132,11 @@ export default function SelectLocation({ route }) {
                 <Text style={styles.nearbyLandmark}>{item.nearbyLandmark}</Text>
               </View>
               <View style={styles.addressActions}>
-              <Image source={EditImage} style={styles.actionIcon} />
-              <Image source={DeleteImage} style={styles.actionIcon} />
-            </View>
+                <TouchableOpacity onPress={() => handleEditAddress(item)}>
+                  <Image source={EditImage} style={styles.actionIcon} />
+                </TouchableOpacity>
+                <Image source={DeleteImage} style={styles.actionIcon} />
+              </View>
             </TouchableOpacity>
           )}
         />
@@ -121,6 +146,36 @@ export default function SelectLocation({ route }) {
           <FontAwesome name="exclamation-circle" size={40} color="gray" />
         </View>
       )}
+
+      {/* Edit Address Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Edit Address</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Address Type"
+              value={selectedAddress?.addressType}
+              onChangeText={(text) => setSelectedAddress({ ...selectedAddress, addressType: text })}
+            />
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Nearby Landmark"
+              value={selectedAddress?.nearbyLandmark}
+              onChangeText={(text) => setSelectedAddress({ ...selectedAddress, nearbyLandmark: text })}
+            />
+            <View style={styles.modalActions}>
+              <Button title="Cancel" onPress={() => setModalVisible(false)} />
+              <Button title="Save" onPress={handleSaveEdit} />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -224,10 +279,11 @@ const styles = StyleSheet.create({
   },
   addressActions: {
     flexDirection: 'row',
+    alignItems: 'center',
   },
   actionIcon: {
     width: 24,
     height: 24,
-    marginLeft: 10,
+    marginHorizontal: 5,
   },
 });

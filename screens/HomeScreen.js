@@ -68,14 +68,14 @@ const HomeScreen = () => {
       {/* Carousel of 3 Cards */}
 
       {/* Tabs */}
-      <View style={styles.tabs}>
+      {/* <View style={styles.tabs}>
         <TouchableOpacity style={styles.tab}>
           <Text style={styles.tabText}>Basic</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab}>
           <Text style={styles.tabText}>Professional</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

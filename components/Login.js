@@ -11,12 +11,13 @@ import {
   UIManager,
   Platform,
   Image,
-  Linking,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons, Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
+import { login, sendOtp } from '../services/api';  // Import your API methods
 
 const Login = ({ onLogin, onSwitchToSignup }) => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -35,75 +36,41 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      let userExists = false;
-      let userDetails;
+      const response = await login(email, phoneNumber, loginWithEmail);
+      if (response.success) {
+        const otpResponse = await sendOtp(email, phoneNumber, loginWithEmail);
+        const otp = otpResponse.otp;
 
-      if (loginWithEmail) {
-        const response = await fetch('https://chefhavn-backend.onrender.com/api/users/check-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ email })
+        setCurrentUser(response.user);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Success',
+          text2: `An OTP has been sent to your ${loginWithEmail ? 'email' : 'phone number'}`,
         });
-        const data = await response.json();
-        userExists = data.exists;
-        userDetails = data.user;
-
-        if (userExists) {
-          const otpResponse = await fetch('https://chefhavn-backend.onrender.com/api/send-otp', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email })
-          });
-          const otpData = await otpResponse.json();
-          const otp = otpData.otp;
-          setCurrentUser(userDetails);
-          Alert.alert('OTP Sent', `An OTP has been sent to your email`);
-          navigation.navigate('OtpScreen', {
-            generatedOtp: otp,
-            onOtpVerified: async () => {
-              await AsyncStorage.setItem('user', JSON.stringify(currentUser));
-              onLogin();
-            }
-          });
-        } else {
-          Alert.alert('Login Failed', 'Your email is not registered. Please register first.');
-        }
+        navigation.navigate('OtpScreen', {
+          generatedOtp: otp,
+          onOtpVerified: async () => {
+            await AsyncStorage.setItem('user', JSON.stringify(response.user));
+            onLogin();
+          }
+        });
       } else {
-        const phone = `${phoneNumber}`;
-        const response = await fetch('https://chefhavn-backend.onrender.com/api/users/check-phone', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ phone })
-        });
-        const data = await response.json();
-        userExists = data.exists;
-        userDetails = data.user;
-
-        if (userExists) {
-          const otp = generateOTP();
-          setGeneratedOtp(otp);
-          setCurrentUser(userDetails);
-          Alert.alert('OTP Sent', `An OTP has been sent to your phone number: ${otp}`);
-          navigation.navigate('OtpScreen', {
-            generatedOtp: otp,
-            onOtpVerified: async () => {
-              await AsyncStorage.setItem('user', JSON.stringify(currentUser));
-              onLogin();
-            }
-          });
-        } else {
-          Alert.alert('Login Failed', 'Your phone number is not registered. Please register first.');
-        }
+        Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: response.message,
+      });
       }
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Login Failed', 'An error occurred while processing your request. Please try again later.');
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: 'An error occurred while processing your request. Please try again later.',
+      });
     } finally {
       setLoading(false);
     }
@@ -168,7 +135,8 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
   };
 
   const navigateToSignupWithMain = () => {
-    navigation.navigate('Signup');
+    // navigation.navigate('Signup');
+    return;
   };
 
   const handleTermsPress = () => {
@@ -189,7 +157,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
           <TouchableOpacity style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
             {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
           </TouchableOpacity>
-          <Text style={styles.title}>Login</Text>
+          <Text style={styles.title}>Login/Register</Text>
           {!loginWithEmail ? (
             <View style={styles.phoneContainer}>
               <View style={styles.flagContainer}>
@@ -226,15 +194,15 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
               <ActivityIndicator color="#fff" />
             ) : (
               <Text style={styles.buttonText}>
-                {loginWithEmail ? "Login" : "Login"}
+                Login/Register
               </Text>
             )}
           </TouchableOpacity>
-          <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
+          {/* <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
             <Text style={styles.linkText}>
               Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
@@ -261,6 +229,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
           </Text>
         </>
       )}
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </View>
   );
 };
@@ -283,7 +252,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
-    marginBottom: 20,
+    marginBottom: 5,
     paddingHorizontal: 10,
   },
   button: {

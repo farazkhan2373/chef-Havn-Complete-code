@@ -25,41 +25,17 @@ export default function BusinessList() {
       category: "basic",
       subCategory: "smallParty",
       name: "Basic Small Event",
-      image: require("../../assets/chefHeaven/placeholder.png"),
       price: "100₹",
       description: "This is the description for basic small event 1",
       quantity: "Up to 10 people",
+      rating: "4.2",
+      distance: "2.6 km",
+      offer: "Flat 20% OFF",
+      location: "Railway Station Road, Secunderabad",
+      cost: "₹1400 for two",
+      cuisine: "Andhra • Biryani",
     },
-    {
-      id: "2",
-      category: "basic",
-      subCategory: "largeParty",
-      name: "Basic Large Event",
-      image: require("../../assets/chefHeaven/placeholder.png"),
-      price: "200₹",
-      description: "This is the description for basic large event 1",
-      quantity: "Up to 25 people",
-    },
-    {
-      id: "3",
-      category: "professional",
-      subCategory: "smallParty",
-      name: "Professional Small Event",
-      image: require("../../assets/chefHeaven/placeholder.png"),
-      price: "300₹",
-      description: "This is the description for professional small event 1",
-      quantity: "Up to 10 people",
-    },
-    {
-      id: "4",
-      category: "professional",
-      subCategory: "largeParty",
-      name: "Professional Large Event",
-      image: require("../../assets/chefHeaven/placeholder.png"),
-      price: "400₹",
-      description: "This is the description for professional large event 1",
-      quantity: "Up to 25 people",
-    },
+    // Add more events here
   ];
 
   const filteredEvents = events.filter(
@@ -71,10 +47,19 @@ export default function BusinessList() {
       style={styles.cardContainer}
       onPress={() => navigation.navigate("EventDetail", { event: item })}
     >
-      <Image source={item.image} style={styles.cardImage} />
+      <View style={styles.cardBgColor} />
       <View style={styles.cardContent}>
+        <Text style={styles.offerText}>
+          {item.offer} + 3 more
+        </Text>
         <Text style={styles.cardName}>{item.name}</Text>
-        <Text style={styles.cardDescription}>{item.quantity}</Text>
+        <Text style={styles.cardLocation}>{item.location}</Text>
+        <View style={styles.cardDetails}>
+          <Text style={styles.rating}>{item.rating}</Text>
+          <Text style={styles.distance}>{item.distance}</Text>
+          <Text style={styles.cost}>{item.cost}</Text>
+        </View>
+        <Text style={styles.cuisine}>{item.cuisine}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -83,7 +68,7 @@ export default function BusinessList() {
     <View style={{ marginTop: 20 }}>
       <Heading text={"Find Your Chef"} isViewAll={false} />
 
-      <View style={styles.tabContainer}>
+      {/* <View style={styles.tabContainer}>
         <TouchableOpacity
           style={[styles.tab, selectedTab === "basic" && styles.selectedTab]}
           onPress={() => handleTabPress("basic")}
@@ -99,30 +84,21 @@ export default function BusinessList() {
         >
           <Text style={styles.tabText}>Professional Cook</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.scene}>
-        {/* <Text style={styles.subCategoryTitle}>
-          Small Party
-        </Text> */}
         <FlatList
-          data={filteredEvents.filter(
-            (event) => event.subCategory === "smallParty"
-          )}
+          data={filteredEvents}
           keyExtractor={(item) => item.id}
           renderItem={renderEvent}
           horizontal
           showsHorizontalScrollIndicator={false}
           style={styles.horizontalList}
         />
-
-        {/* <Text style={styles.subCategoryTitle}>
-          Large Party
-        </Text> */}
+      </View>
+      <View style={styles.scene}>
         <FlatList
-          data={filteredEvents.filter(
-            (event) => event.subCategory === "largeParty"
-          )}
+          data={filteredEvents}
           keyExtractor={(item) => item.id}
           renderItem={renderEvent}
           horizontal
@@ -135,6 +111,63 @@ export default function BusinessList() {
 }
 
 const styles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    margin: 10,
+    padding: 10,
+    width: 300, // Adjust the width as needed
+  },
+  cardBgColor: {
+    backgroundColor: "#F5F5F5",
+    height: 100,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  cardContent: {
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  offerText: {
+    backgroundColor: "#007BFF", // Example color
+    color: "#fff",
+    padding: 5,
+    borderRadius: 5,
+    marginBottom: 5,
+  },
+  cardName: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  cardLocation: {
+    color: "#666",
+    marginVertical: 5,
+  },
+  cardDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  rating: {
+    backgroundColor: "#4CAF50", // Example color
+    color: "#fff",
+    padding: 5,
+    borderRadius: 5,
+  },
+  distance: {
+    color: "#666",
+  },
+  cost: {
+    color: "#666",
+  },
+  cuisine: {
+    marginTop: 10,
+    color: "#666",
+  },
   tabContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -156,55 +189,6 @@ const styles = StyleSheet.create({
   },
   scene: {
     marginTop: 10,
-  },
-  subCategoryTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginHorizontal: 10,
-    marginVertical: 10,
-  },
-  cardContainer: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    margin: 10,
-    padding: 10,
-    alignItems: "center",
-    width: "auto",
-  },
-  cardImage: {
-    width: 100,
-    height: 100,
-    resizeMode: "contain",
-    marginRight: 20,
-    borderRadius: 10,
-  },
-  cardContent: {
-    flex: 1,
-    marginRight: 10,
-  },
-  cardName: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  cardPrice: {
-    fontSize: 16,
-    color: Colors.primary,
-    marginBottom: 5,
-  },
-  cardDescription: {
-    fontSize: 14,
-    color: "#666",
-  },
-  cardQuantity: {
-    fontSize: 14,
-    color: "#666",
-    marginTop: 5,
   },
   horizontalList: {
     paddingLeft: 10,

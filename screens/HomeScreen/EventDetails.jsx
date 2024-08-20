@@ -12,7 +12,8 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../utils/Colors";
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
+
 
 const EventDetail = ({ route }) => {
   const navigation = useNavigation();
@@ -76,9 +77,7 @@ const EventDetail = ({ route }) => {
       guestQuantity,
       date,
     });
-    // Implement booking logic here
 
-    // Navigate to the checkout screen
     navigation.navigate("CheckoutScreen", {
       event,
       guestQuantity,
@@ -88,6 +87,16 @@ const EventDetail = ({ route }) => {
       numberOfPeople,
       selectedType
     });
+  };
+
+  const isFormComplete = () => {
+    return (
+      numberOfHours &&
+      numberOfPeople &&
+      guestQuantity &&
+      selectedType &&
+      date
+    );
   };
 
   return (
@@ -112,6 +121,7 @@ const EventDetail = ({ route }) => {
         )}
         <Text style={styles.description}>{event.description}</Text>
 
+        {/* Step 1: Number of Hours and Number of People */}
         <Text style={styles.inputLabel}>Number of Hours:</Text>
         <View style={styles.pickerContainer}>
           <Picker
@@ -135,51 +145,59 @@ const EventDetail = ({ route }) => {
           placeholder="Enter number of people"
         />
 
-        <Text style={styles.inputLabel}>Number of Dishes:</Text>
-        <TextInput
-          style={styles.input}
-          value={guestQuantity}
-          onChangeText={setGuestQuantity}
-          keyboardType="numeric"
-          placeholder="Enter number of dishes"
-        />
+        {/* Step 2: Number of Dishes and Type (visible after selecting hours and people) */}
+        {numberOfHours && numberOfPeople ? (
+          <>
+            <Text style={styles.inputLabel}>Number of Dishes:</Text>
+            <TextInput
+              style={styles.input}
+              value={guestQuantity}
+              onChangeText={setGuestQuantity}
+              keyboardType="numeric"
+              placeholder="Enter number of dishes"
+            />
 
-        <Text style={styles.inputLabel}>Type:</Text>
-        <View style={styles.typeContainer}>
-          <TouchableOpacity
-            style={[styles.typeOption, selectedType === "Veg" && styles.selectedTypeOption]}
-            onPress={() => setSelectedType("Veg")}
-          >
-            <Text style={styles.typeText}>Veg</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.typeOption, selectedType === "Non-Veg" && styles.selectedTypeOption]}
-            onPress={() => setSelectedType("Non-Veg")}
-          >
-            <Text style={styles.typeText}>Non-Veg</Text>
-          </TouchableOpacity>
-        </View>
+            <Text style={styles.inputLabel}>Type:</Text>
+            <View style={styles.typeContainer}>
+              <TouchableOpacity
+                style={[styles.typeOption, selectedType === "Veg" && styles.selectedTypeOption]}
+                onPress={() => setSelectedType("Veg")}
+              >
+                <Text style={styles.typeText}>Veg</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.typeOption, selectedType === "Non-Veg" && styles.selectedTypeOption]}
+                onPress={() => setSelectedType("Non-Veg")}
+              >
+                <Text style={styles.typeText}>Non-Veg</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : null}
 
-        <View style={styles.dateTimeContainer}>
-          <View style={styles.dateTimeInput}>
-            <Text style={styles.label}>Date</Text>
-            <TouchableOpacity
-              style={styles.datePickerInput}
-              onPress={showDatepicker}
-            >
-              <Text>{date.toLocaleDateString()}</Text>
-            </TouchableOpacity>
+        {/* Step 3: Date and Time (visible after selecting dishes and type) */}
+        {guestQuantity && selectedType ? (
+          <View style={styles.dateTimeContainer}>
+            <View style={styles.dateTimeInput}>
+              <Text style={styles.label}>Date</Text>
+              <TouchableOpacity
+                style={styles.datePickerInput}
+                onPress={showDatepicker}
+              >
+                <Text>{date.toLocaleDateString()}</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.dateTimeInput}>
+              <Text style={styles.label}>Time</Text>
+              <TouchableOpacity
+                style={styles.datePickerInput}
+                onPress={showTimepicker}
+              >
+                <Text>{date.toLocaleTimeString()}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.dateTimeInput}>
-            <Text style={styles.label}>Time</Text>
-            <TouchableOpacity
-              style={styles.datePickerInput}
-              onPress={showTimepicker}
-            >
-              <Text>{date.toLocaleTimeString()}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        ) : null}
 
         {show && (
           <DateTimePicker
@@ -196,7 +214,15 @@ const EventDetail = ({ route }) => {
           />
         )}
 
-        <TouchableOpacity style={styles.bookButton} onPress={handleBookNow}>
+        {/* Step 4: Book Now button (disabled until form is complete) */}
+        <TouchableOpacity
+          style={[
+            styles.bookButton,
+            !isFormComplete() && styles.disabledBookButton,
+          ]}
+          onPress={handleBookNow}
+          disabled={!isFormComplete()}
+        >
           <Text style={styles.bookButtonText}>Book Now</Text>
         </TouchableOpacity>
       </View>
@@ -216,6 +242,9 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
+  },
+  disabledBookButton: {
+    backgroundColor: "#ccc",
   },
   name: {
     fontSize: 24,
@@ -242,6 +271,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
+    marginBottom: 20,
   },
   pickerContainer: {
     borderColor: "#ccc",
@@ -274,35 +304,36 @@ const styles = StyleSheet.create({
   },
   typeContainer: {
     flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 20,
   },
   typeOption: {
     flex: 1,
-    paddingVertical: 10,
-    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
     borderWidth: 1,
     borderColor: "#ccc",
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 5,
+    borderRadius: 5,
+    marginLeft: 5,
   },
   selectedTypeOption: {
-    backgroundColor: Colors.primary,
-    borderColor: Colors.primary,
+    backgroundColor: Colors.LIGHT_BLUE,
+    borderColor: Colors.LIGHT_BLUE,
   },
   typeText: {
-    color: Colors.BLACK,
+    fontSize: 16,
   },
   bookButton: {
-    backgroundColor: "#503A73",
-    paddingVertical: 15,
+    backgroundColor: Colors.PRIMARY,
+    padding: 15,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 20,
   },
   bookButtonText: {
     color: "#fff",
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 
