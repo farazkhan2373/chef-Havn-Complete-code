@@ -89,15 +89,15 @@ export default function HomeScreen() {
     );
   }
 
-  if (city && city !== "Hyderabad") {
-    return (
-      <SafeAreaView style={styles.noServiceContainer}>
-        <Text style={styles.noServiceText}>
-          No service available in your area
-        </Text>
-      </SafeAreaView>
-    );
-  }
+  // if (city && city !== "Hyderabad") {
+  //   return (
+  //     <SafeAreaView style={styles.noServiceContainer}>
+  //       <Text style={styles.noServiceText}>
+  //         No service available in your area
+  //       </Text>
+  //     </SafeAreaView>
+  //   );
+  // }
 
   const handleViewOrder = () => {
     // Navigate to the order details screen or perform any action
@@ -191,13 +191,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     backgroundColor: Colors.WHITE,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
     elevation: 5,
     borderRadius: 10
   },
@@ -224,13 +218,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     backgroundColor: Colors.WHITE,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
     elevation: 5,
     borderRadius: 10
   },

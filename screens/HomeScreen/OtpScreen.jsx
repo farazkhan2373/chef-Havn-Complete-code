@@ -48,10 +48,10 @@ const OtpScreen = ({ navigation, route }) => {
             ]}
             value={digit}
             onChangeText={(value) => handleOtpChange(value, index)}
-            keyboardType="numeric"
+            inputMode="numeric"
             maxLength={1}
             ref={(ref) => (inputRefs.current[index] = ref)}
-            returnKeyType={index === otp.length - 1 ? "done" : "next"}
+            enterKeyHint={index === otp.length - 1 ? "done" : "next"}
             onFocus={() => setSelectedInput(index)}
             onBlur={() => setSelectedInput(null)}
             onSubmitEditing={() => {

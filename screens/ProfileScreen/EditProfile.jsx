@@ -154,7 +154,7 @@ export default function EditProfile() {
           </View>
         )
       )}
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast />
     </View>
   );
 }

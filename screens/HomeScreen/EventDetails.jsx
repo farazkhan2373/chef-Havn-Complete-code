@@ -14,7 +14,6 @@ import { useNavigation } from "@react-navigation/native";
 import Colors from "../../utils/Colors";
 import { Picker } from "@react-native-picker/picker";
 
-
 const EventDetail = ({ route }) => {
   const navigation = useNavigation();
   const { event } = route.params;
@@ -72,12 +71,6 @@ const EventDetail = ({ route }) => {
   };
 
   const handleBookNow = () => {
-    console.log("Booking Details:", {
-      event: event.name,
-      guestQuantity,
-      date,
-    });
-
     navigation.navigate("CheckoutScreen", {
       event,
       guestQuantity,
@@ -85,17 +78,13 @@ const EventDetail = ({ route }) => {
       numberOfHours,
       price,
       numberOfPeople,
-      selectedType
+      selectedType,
     });
   };
 
   const isFormComplete = () => {
     return (
-      numberOfHours &&
-      numberOfPeople &&
-      guestQuantity &&
-      selectedType &&
-      date
+      numberOfHours && numberOfPeople && guestQuantity && selectedType && date
     );
   };
 
@@ -131,7 +120,11 @@ const EventDetail = ({ route }) => {
           >
             <Picker.Item label="Select hours" value="" />
             {Array.from({ length: 9 }, (_, i) => i + 2).map((hour) => (
-              <Picker.Item key={hour} label={`${hour} hours`} value={`${hour}`} />
+              <Picker.Item
+                key={hour}
+                label={`${hour} hours`}
+                value={`${hour}`}
+              />
             ))}
           </Picker>
         </View>
@@ -160,13 +153,19 @@ const EventDetail = ({ route }) => {
             <Text style={styles.inputLabel}>Type:</Text>
             <View style={styles.typeContainer}>
               <TouchableOpacity
-                style={[styles.typeOption, selectedType === "Veg" && styles.selectedTypeOption]}
+                style={[
+                  styles.typeOption,
+                  selectedType === "Veg" && styles.selectedTypeOption,
+                ]}
                 onPress={() => setSelectedType("Veg")}
               >
                 <Text style={styles.typeText}>Veg</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.typeOption, selectedType === "Non-Veg" && styles.selectedTypeOption]}
+                style={[
+                  styles.typeOption,
+                  selectedType === "Non-Veg" && styles.selectedTypeOption,
+                ]}
                 onPress={() => setSelectedType("Non-Veg")}
               >
                 <Text style={styles.typeText}>Non-Veg</Text>

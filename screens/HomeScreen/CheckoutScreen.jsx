@@ -5,7 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../utils/Colors";
 
 const CheckoutScreen = ({ route }) => {
-  const { event, guestQuantity, date, numberOfHours } = route.params;
+  const { event, guestQuantity, date, numberOfHours,numberOfPeople,selectedType } = route.params;
   const navigation = useNavigation();
   const [user, setUser] = useState(null);
 
@@ -64,6 +64,14 @@ const CheckoutScreen = ({ route }) => {
       ]);
     }
   };
+
+    console.log(event.category)
+  console.log(guestQuantity)
+  console.log(date)
+  console.log(numberOfHours)
+  console.log(price)
+  console.log(numberOfPeople)
+  console.log(selectedType)
 
   return (
     <View style={styles.container}>
@@ -141,10 +149,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#f9f9f9",
     borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
     elevation: 5,
   },
   priceItem: {

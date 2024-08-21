@@ -2,9 +2,9 @@
 import { Platform } from 'react-native';
 
 // Define your base URL based on environment
-// const isDevelopment = __DEV__;
-const isDevelopment = "";
-const BASE_URL = isDevelopment ? 'http://localhost:3000' : 'https://chefhavn.com/';
+const isDevelopment = __DEV__;
+// const isDevelopment = "";
+const BASE_URL = isDevelopment ? 'http://localhost:3000' : 'https://chefhavn.com';
 
 
 // API method for logging in

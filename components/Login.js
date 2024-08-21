@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   Alert,
@@ -11,6 +10,7 @@ import {
   UIManager,
   Platform,
   Image,
+  Pressable
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Google from 'expo-auth-session/providers/google';
@@ -154,9 +154,9 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
         <ActivityIndicator size="large" color="#503A73" />
       ) : (
         <>
-          <TouchableOpacity style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
+          <Pressable style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
             {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
-          </TouchableOpacity>
+          </Pressable>
           <Text style={styles.title}>Login/Register</Text>
           {!loginWithEmail ? (
             <View style={styles.phoneContainer}>
@@ -172,7 +172,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                 placeholder="Phone Number"
                 value={phoneNumber}
                 onChangeText={setPhoneNumber}
-                keyboardType="phone-pad"
+                inputMode="phone-pad"
                 maxLength={10}
               />
             </View>
@@ -182,10 +182,10 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
               placeholder="Email"
               value={email}
               onChangeText={setEmail}
-              keyboardType="email-address"
+              inputMode="email-address"
             />
           )}
-          <TouchableOpacity
+          <Pressable
             style={styles.button}
             onPress={handleLogin}
             disabled={loading}
@@ -197,12 +197,12 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
                 Login/Register
               </Text>
             )}
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={onSwitchToSignup} style={styles.signupLink}>
+          </Pressable>
+          {/* <Pressable onPress={onSwitchToSignup} style={styles.signupLink}>
             <Text style={styles.linkText}>
               Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
             </Text>
-          </TouchableOpacity> */}
+          </Pressable> */}
 
           <View style={styles.separatorContainer}>
             <View style={styles.separator} />
@@ -211,15 +211,15 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
           </View>
 
           <View style={styles.socialButtonsContainer}>
-            <TouchableOpacity style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
+            <Pressable style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
               <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
+            </Pressable>
+            <Pressable style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
               <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
+            </Pressable>
+            <Pressable style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
               <Ionicons name="logo-apple" size={24} color="white" />
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           <Text style={styles.termsText}>
@@ -229,7 +229,7 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
           </Text>
         </>
       )}
-      <Toast ref={(ref) => Toast.setRef(ref)} />
+      <Toast />
     </View>
   );
 };
@@ -370,5 +370,3 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
-
-// 

@@ -19,7 +19,7 @@ export default function BusinessList() {
     setSelectedTab(tab);
   };
 
-  const events = [
+  const basicEvents = [
     {
       id: "1",
       category: "basic",
@@ -35,12 +35,31 @@ export default function BusinessList() {
       cost: "₹1400 for two",
       cuisine: "Andhra • Biryani",
     },
-    // Add more events here
+    // Add more basic events here
   ];
 
-  const filteredEvents = events.filter(
-    (event) => event.category === selectedTab
-  );
+  const professionalEvents = [
+    {
+      id: "2",
+      category: "professional",
+      subCategory: "smallParty",
+      name: "Professional Small Event",
+      price: "200₹",
+      description: "This is the description for professional small event 1",
+      quantity: "Up to 20 people",
+      rating: "4.8",
+      distance: "3.0 km",
+      offer: "Flat 15% OFF",
+      location: "MG Road, Hyderabad",
+      cost: "₹2000 for two",
+      cuisine: "Hyderabadi • Biryani",
+    },
+    // Add more professional events here
+  ];
+
+  // const filteredEvents = events.filter(
+  //   (event) => event.category === selectedTab
+  // );
 
   const renderEvent = ({ item }) => (
     <TouchableOpacity
@@ -49,9 +68,7 @@ export default function BusinessList() {
     >
       <View style={styles.cardBgColor} />
       <View style={styles.cardContent}>
-        <Text style={styles.offerText}>
-          {item.offer} + 3 more
-        </Text>
+        <Text style={styles.offerText}>{item.offer} + 3 more</Text>
         <Text style={styles.cardName}>{item.name}</Text>
         <Text style={styles.cardLocation}>{item.location}</Text>
         <View style={styles.cardDetails}>
@@ -88,7 +105,7 @@ export default function BusinessList() {
 
       <View style={styles.scene}>
         <FlatList
-          data={filteredEvents}
+          data={basicEvents}
           keyExtractor={(item) => item.id}
           renderItem={renderEvent}
           horizontal
@@ -98,7 +115,7 @@ export default function BusinessList() {
       </View>
       <View style={styles.scene}>
         <FlatList
-          data={filteredEvents}
+          data={professionalEvents}
           keyExtractor={(item) => item.id}
           renderItem={renderEvent}
           horizontal
@@ -115,10 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 10,
     elevation: 3,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
     margin: 10,
     padding: 10,
     width: 300, // Adjust the width as needed
