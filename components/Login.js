@@ -154,79 +154,85 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
         <ActivityIndicator size="large" color="#503A73" />
       ) : (
         <>
-          <Pressable style={styles.guestButton} onPress={handleGuestLogin} disabled={loading}>
-            {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
-          </Pressable>
-          <Text style={styles.title}>Login/Register</Text>
-          {!loginWithEmail ? (
-            <View style={styles.phoneContainer}>
-              <View style={styles.flagContainer}>
-                <Image
-                  source={{ uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png' }}
-                  style={styles.flag}
-                />
-                <Text style={styles.countryCode}>+91</Text>
-              </View>
-              <TextInput
-                style={styles.phoneNumberInput}
-                placeholder="Phone Number"
-                value={phoneNumber}
-                onChangeText={setPhoneNumber}
-                inputMode="phone-pad"
-                maxLength={10}
-              />
-            </View>
-          ) : (
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-              inputMode="email-address"
+          <View style={styles.topSection}>
+            <Pressable style={styles.guestButton} onPress={handleGuestLogin} disabled={loadingGuest}>
+                {loadingGuest ? <ActivityIndicator color="#503A73" /> : <Text style={styles.linkTextGuest}>Skip</Text>}
+            </Pressable>
+            <View style={styles.logoImageContainer}>
+            <Image
+                source={require('../assets/chefHeaven/Chef-Logo-2.png')}
+                style={styles.image}
             />
-          )}
-          <Pressable
-            style={styles.button}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
+            </View>
+            </View>
+            <View style={styles.bottomSection}>
+            <Text style={styles.title}>Content #1</Text>
+            {!loginWithEmail ? (
+                <View style={styles.phoneContainer}>
+                    <View style={styles.flagContainer}>
+                        <Image
+                            source={{ uri: 'https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/1200px-Flag_of_India.svg.png' }}
+                            style={styles.flag}
+                        />
+                        <Text style={styles.countryCode}>+91</Text>
+                    </View>
+                    <TextInput
+                        style={styles.phoneNumberInput}
+                        placeholder="Phone Number"
+                        value={phoneNumber}
+                        onChangeText={setPhoneNumber}
+                        inputMode="phone-pad"
+                        maxLength={10}
+                    />
+                </View>
             ) : (
-              <Text style={styles.buttonText}>
-                Login/Register
-              </Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Email"
+                    value={email}
+                    onChangeText={setEmail}
+                    inputMode="email-address"
+                />
             )}
-          </Pressable>
-          {/* <Pressable onPress={onSwitchToSignup} style={styles.signupLink}>
-            <Text style={styles.linkText}>
-              Not a member? <Text style={{ color: '#503A73', fontWeight: '600' }}>Register now</Text>
+            <Pressable
+                style={styles.button}
+                onPress={handleLogin}
+                disabled={loading}
+            >
+                {loading ? (
+                    <ActivityIndicator color="#fff" />
+                ) : (
+                    <Text style={styles.buttonText}>
+                        Login/Register
+                    </Text>
+                )}
+            </Pressable>
+
+            <View style={styles.separatorContainer}>
+                <View style={styles.separator} />
+                <Text style={styles.separatorText}>Or continue with</Text>
+                <View style={styles.separator} />
+            </View>
+
+            <View style={styles.socialButtonsContainer}>
+                <Pressable style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
+                    <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
+                </Pressable>
+                <Pressable style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
+                    <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
+                </Pressable>
+                <Pressable style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
+                    <Ionicons name="logo-apple" size={24} color="white" />
+                </Pressable>
+            </View>
+
+            <Text style={styles.termsText}>
+                By logging in you agree to our{' '}
+                <Text style={styles.link} onPress={handleTermsPress}>terms</Text> and{' '}
+                <Text style={styles.link} onPress={handlePrivacyPress}>privacy policy</Text>.
             </Text>
-          </Pressable> */}
-
-          <View style={styles.separatorContainer}>
-            <View style={styles.separator} />
-            <Text style={styles.separatorText}>Or continue with</Text>
-            <View style={styles.separator} />
-          </View>
-
-          <View style={styles.socialButtonsContainer}>
-            <Pressable style={[styles.socialButton, styles.emailPhoneButton]} onPress={toggleLoginMethod}>
-              <MaterialIcons name={loginWithEmail ? "phone" : "email"} size={24} color="white" />
-            </Pressable>
-            <Pressable style={[styles.socialButton, styles.googleButton]} onPress={() => promptAsync()}>
-              <Image source={require('../assets/chefHeaven/Google-50x50.png')} style={styles.googleIcon} />
-            </Pressable>
-            <Pressable style={[styles.socialButton, styles.appleButton]} onPress={navigateToSignupWithMain}>
-              <Ionicons name="logo-apple" size={24} color="white" />
-            </Pressable>
-          </View>
-
-          <Text style={styles.termsText}>
-            By logging in you agree to our{' '}
-            <Text style={styles.link} onPress={handleTermsPress}>terms</Text> and{' '}
-            <Text style={styles.link} onPress={handlePrivacyPress}>privacy policy</Text>.
-          </Text>
+            </View>
+        
         </>
       )}
       <Toast />
@@ -237,101 +243,130 @@ const Login = ({ onLogin, onSwitchToSignup }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
     backgroundColor: '#fff',
-  },
-  title: {
+},
+topSection: {
+    width: '100%',
+    height: '40%',
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    overflow: 'hidden',
+    justifyContent: 'center',
+},
+guestButton: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    padding: 10,
+    fontWeight: 'bold',
+    zIndex: 1,
+},
+linkTextGuest: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    backgroundColor:  "rgba(0, 0, 0, 0.16)",
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingHorizontal: 12,
+    borderRadius: 17,
+},
+image: {
+    width: '200px',
+    height: '200px',
+    
+},
+logoImageContainer: {
+   
+   width: '100%',
+   height: '100%',
+   borderBottomLeftRadius: 40,
+   borderBottomRightRadius: 40,
+   overflow: 'hidden',
+   backgroundColor: '#503a73',
+   display: 'flex',
+   alignItems: 'center',
+   justifyContent: 'center',
+
+},
+bottomSection: {
+    flex: 1,
+    paddingHorizontal: 40,
+    paddingTop: 20,
+},
+title: {
     fontSize: 16,
     color: '#111',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  input: {
+},
+input: {
     height: 50,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 5,
     paddingHorizontal: 10,
-  },
-  button: {
+},
+button: {
     backgroundColor: '#503A73',
     padding: 13,
-    borderRadius: 5,
+    borderRadius: 8,
     alignItems: 'center',
     marginBottom: 10,
     marginTop: 10
-  },
-  buttonText: {
+},
+buttonText: {
     color: '#fff',
-    fontSize: 16,
-  },
-  separatorContainer: {
+    fontSize: 18,
+    fontWeight: "bold",
+    padding: 6
+},
+separatorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 20,
-  },
-  separator: {
+},
+separator: {
     flex: 1,
     height: 1,
     backgroundColor: '#ccc',
-  },
-  separatorText: {
+},
+separatorText: {
     marginHorizontal: 10,
     fontSize: 16,
     color: '#111',
-  },
-  socialButtonsContainer: {
+},
+socialButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 20,
-  },
-  socialButton: {
+},
+socialButton: {
     height: 50,
     width: 50,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 5,
-  },
-  emailPhoneButton: {
+},
+emailPhoneButton: {
     backgroundColor: "#6a4d99"
-  },
-  googleButton: {
+},
+googleButton: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#6a4d99',
     borderRadius: 50,
-  },
-  appleButton: {
+},
+appleButton: {
     backgroundColor: '#000',
-  },
-  googleIcon: {
+},
+googleIcon: {
     width: 24,
     height: 24,
-  },
-  guestButton: {
-    position: 'absolute',
-    top: 40,
-    right: 20,
-    padding: 10,
-    fontWeight: 'bold'
-  },
-  linkTextGuest: {
-    color: '#503A73',
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-  linkText: {
-    fontSize: 16,
-  },
-  signupLink: {
-    marginTop: 10,
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  phoneContainer: {
+},
+phoneContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
@@ -340,33 +375,33 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     height: 50,
     paddingHorizontal: 10,
-  },
-  flagContainer: {
+},
+flagContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 10,
-  },
-  flag: {
+},
+flag: {
     width: 30,
     height: 20,
     marginRight: 5,
-  },
-  countryCode: {
+},
+countryCode: {
     fontSize: 16,
-  },
-  phoneNumberInput: {
+},
+phoneNumberInput: {
     flex: 1,
     height: 50,
-  },
-  termsText: {
+},
+termsText: {
     marginTop: 20,
     textAlign: 'center',
     color: '#111',
-  },
-  link: {
+},
+link: {
     color: '#503A73',
     textDecorationLine: 'underline',
-  },
+},
 });
 
 export default Login;

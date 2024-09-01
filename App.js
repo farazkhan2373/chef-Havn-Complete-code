@@ -19,35 +19,54 @@ import EditProfile from './screens/ProfileScreen/EditProfile.jsx';
 import Login from './components/Login.js';
 import OtpScreen from './screens/HomeScreen/OtpScreen.jsx';
 import withBackground from './withBackground';
-import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import Colors from './utils/Colors.js';
 import Terms from './screens/ProfileScreen/TermsScreen.jsx';
 import Privacy from './screens/ProfileScreen/PrivacyScreen.jsx';
 import SelectLocation from './screens/MapScreen/SelectLocation.js';
 import ReportSafetyIssue from './screens/ProfileScreen/ReportSafetyIssue.jsx';
 import OrderDetailsScreen from './screens/ProfileScreen/OrderDetailsScreen.jsx';
-import SignUpWithMail from './components/SignUpWithMail.js';
 import Signup from './components/Signup.js';
+import WelcomeLoginScreen from './screens/LoginScreen/WelcomeLogin.jsx';
+import MapForm from './screens/MapScreen/MapForm.js';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = () => (
   <Tab.Navigator
-    screenOptions={{ headerShown: false, tabBarActiveTintColor: Colors.PRIMARY }}
+    screenOptions={{ 
+       headerShown: false,
+       tabBarActiveTintColor: Colors.WHITE,
+       tabBarStyle: {
+         position: 'fixed',
+         height: 65,
+         bottom: 12,
+         left: '5%',  // Use percentages instead of vw
+         right: '5%', // Use percentages instead of vw
+         backgroundColor: '#503a73',
+         borderRadius: 35,
+         width: '90%', // Use percentages instead of vw
+         padding: 8,
+         
+       },
+       tabBarLabelStyle: {
+         color: 'white',
+         display: 'none',
+       }
+      }} 
   >
     <Tab.Screen
       name="HomeScreen"
       component={withBackground(HomeS)}
       options={{
         headerShown: false,
-        tabBarLabel: ({ color }) => (
-          <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'Home' : 'Home'}</Text>
-        ),
+        // tabBarLabel: ({ color }) => (
+        //   <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'Home' : 'Home'}</Text>
+        // ),
         tabBarIcon: ({ color, size }) => (
           <Image
             source={require('./assets/chefHeaven/home.png')}
-            style={{ width: 24, height: 24, tintColor: color }}
+            style={{ width: 36, height: 36, tintColor: color }}
           />
         )
       }}
@@ -57,34 +76,33 @@ const TabNavigator = () => (
       component={withBackground(MyOrdersScreen)}
       options={{
         headerShown: false,
-        tabBarLabel: ({ color }) => (
-          <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'My Orders' : 'My Orders'}</Text>
-        ),
+        // tabBarLabel: ({ color }) => (
+        //   <Text style={{ color: color, fontSize: 12 }}>{color === Colors.PRIMARY ? 'My Orders' : 'My Orders'}</Text>
+        // ),
         tabBarIcon: ({ color, size }) => (
           <Image
             source={require('./assets/chefHeaven/myorder.png')}
-            style={{ width: 24, height: 24, tintColor: color }}
+            style={{ width: 34, height: 34, tintColor: color }}
           />
         )
       }}
     />
     <Tab.Screen
-      name="MyProfile"
-      component={withBackground(EditProfile)}
+      name="Profile"
+      component={withBackground(ProfileScreen)}
       options={{
         headerShown: false,
         tabBarLabel: '',
         tabBarIcon: ({ color, size }) => (
           <Image
             source={require('./assets/836.png')}
-            style={{ width: 50, height: 50, marginTop: 15 }}
+            style={{ width: 34, height: 34 }}
           />
         )
       }}
     />
   </Tab.Navigator>
 );
-
 
 const App = () => {
   return (
@@ -96,7 +114,7 @@ const App = () => {
         <Stack.Screen name="EventDetail" component={withBackground(EventDetail)} options={{ title: 'Event Detail' }} />
         <Stack.Screen name="CheckoutScreen" component={withBackground(CheckoutScreen)} />
         <Stack.Screen name="ThankyouDetails" component={withBackground(ThankYouScreen)} options={{ title: 'Thankyou' }} />
-        <Stack.Screen name="Profile" component={withBackground(ProfileScreen)} options={{ headerShown: true }} />
+        <Stack.Screen name="Profile" component={withBackground(ProfileScreen)}   options={{headerShown: true}} />
         <Stack.Screen name="MyOrders" component={withBackground(MyOrdersScreen)} options={{ headerShown: true }} />
         <Stack.Screen name="Settings" component={withBackground(SettingsScreen)} options={{ headerShown: true }} />
         <Stack.Screen name="About" component={withBackground(AboutScreen)} options={{ headerShown: true }} />
@@ -111,6 +129,8 @@ const App = () => {
         <Stack.Screen name="OtpScreen" component={OtpScreen} />
         <Stack.Screen name="ReportSafetyIssue" component={ReportSafetyIssue} />
         <Stack.Screen name="OrderDetails" component={OrderDetailsScreen} />
+        <Stack.Screen name="WelcomeLoginScreen" component={WelcomeLoginScreen} />
+        <Stack.Screen name="MapForm" component={MapForm} />
 
       </Stack.Navigator>
     </NavigationContainer>

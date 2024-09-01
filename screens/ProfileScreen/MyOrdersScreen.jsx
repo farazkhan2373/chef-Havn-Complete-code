@@ -5,6 +5,8 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Image,
+  TextInput,
 } from "react-native";
 import Colors from "../../utils/Colors";
 import { useNavigation } from "@react-navigation/native";
@@ -89,15 +91,17 @@ export default function MyOrdersScreen() {
 
   const renderItem = ({ item }) => (
     <View style={styles.orderItem}>
+
+      {/* 1st Header */}
       <View style={styles.orderHeader}>
-        <View style={styles.priceContainer}>
-          <Text style={styles.price}>₹{item.totalCost}</Text>
+        <View style={styles.orderDetailContainer}>
           <Text style={[styles.orderStatus, getStatusStyle(item.status)]}>
             {item.status}
           </Text>
+          <Text style={styles.eventType}>{item.eventType}</Text>
+          <Text style={styles.orderNumber}>Order #{item.orderId}</Text>
         </View>
         <View style={styles.orderInfo}>
-          <Text style={styles.orderNumber}>Order #{item.orderId}</Text>
           <TouchableOpacity
             onPress={() => navigation.navigate("OrderDetails", { order: item })}
           >
@@ -105,6 +109,9 @@ export default function MyOrdersScreen() {
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* 2nd Location */}
+      <View style={styles.chefCustomerLocation}>
       <View style={styles.locationContainer}>
         <Text style={styles.locationLabel}>Chef Location</Text>
         <Text style={styles.locationText}>{item.contact.address}</Text>
@@ -114,11 +121,54 @@ export default function MyOrdersScreen() {
         <Text style={styles.locationText}>{item.contact.address}</Text>
       </View>
     </View>
+
+    {/* 3rd Price */}
+    <View style={styles.priceContainer}>
+    <Text style={styles.eventDate}>Event Placed on {item.eventDate}</Text>
+    <Text style={styles.price}>₹{item.totalCost}</Text>
+    </View>
+
+    {/* 4th Rating */}
+    <View style={styles.ratingContainer}>
+    <Text style={styles.ratingText}>Rate</Text>
+    <View style={styles.starContainer}>
+    <Image
+        source={require('../../assets/icons/starIcon.svg')} // Replace with your image path
+        style={styles.starImage}
+      />
+      <Image
+        source={require('../../assets/icons/starIcon.svg')} // Replace with your image path
+        style={styles.starImage}
+      />
+      <Image
+        source={require('../../assets/icons/starIcon.svg')} // Replace with your image path
+        style={styles.starImage}
+      />
+      <Image
+        source={require('../../assets/icons/starIcon.svg')} // Replace with your image path
+        style={styles.starImage}
+      />
+      <Image
+        source={require('../../assets/icons/starIcon.svg')} // Replace with your image path
+        style={styles.starImage}
+      />
+    </View>
+
+    </View>
+
+    </View>
   );
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>My Orders</Text>
+      <View style={styles.searchBarContainer}>
+        <Image source={require('../../assets/icons/searchIcon.svg')} style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+        />
+      </View>
       <FlatList
         data={orders}
         renderItem={renderItem}
@@ -156,28 +206,55 @@ const styles = StyleSheet.create({
     marginTop: 35,
     color: Colors.PRIMARY,
   },
-  orderItem: {
-    padding: 15,
+  searchBarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
     borderRadius: 8,
-    marginBottom: 10,
-    backgroundColor: Colors.WHITE,
-    boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
-    elevation: 2,
+    backgroundColor: '#fff', // Adjust this to your preferred background color
+    marginBottom: 16,
+    boxShadow: '0px 1px 3.84px rgba(0, 0, 0, 0.15)',
+    elevation: 5,
+    
+  },
+  searchIcon: {
+    width: 28, // Adjust icon size
+    height: 28,
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 18,
+    color: 'gray',
+    outlineWidth: 0,
+  },
+  orderItem: {
+  borderRadius: 12,
+  marginBottom: 10,
+  backgroundColor: '#fff',
+  boxShadow: '0px 2px 3.84px rgba(0, 0, 0, 0.25)',
+  elevation: 5,
+  overflow: 'hidden',
+  border: '2px solid #d2d2d2',
   },
   orderHeader: {
     flexDirection: "row",
+    padding: 8,
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 10,
+    backgroundColor: '#f6f6f6',
+    borderBottomWidth: '1px',
+    borderColor: '#c8c8c8'
   },
-  priceContainer: {
+  eventType: {
+   fontSize: 18,
+   fontWeight: 'bold',
+   marginTop: 12,
+  },
+  orderDetailContainer: {
     alignItems: "flex-start",
   },
-  price: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: Colors.BLACK,
-  },
+  
   orderStatus: {
     marginTop: 5,
     paddingVertical: 3,
@@ -201,10 +278,18 @@ const styles = StyleSheet.create({
     color: Colors.DARK_GRAY,
     marginLeft: 10,
   },
+
+  chefCustomerLocation: {
+    paddingVertical: 14,
+    paddingHorizontal: 10,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+
+
+  },
   locationContainer: {
-    marginTop: 10,
     padding: 10,
-    backgroundColor: Colors.BACKGROUND,
     borderRadius: 8,
   },
   locationLabel: {
@@ -217,4 +302,46 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.DARK_GRAY,
   },
+
+  priceContainer:{
+    borderTopWidth: 1,
+    borderStyle: 'dashed',
+    borderTopColor: 'gray',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+  },
+  eventDate: {
+    color: Colors.GRAY,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: Colors.BLACK,
+  },
+  ratingContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderTopWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'gray',
+  },
+  ratingText: {
+    fontSize: 16,
+   fontWeight: 'bold',
+  },
+  starContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    
+  }
 });

@@ -10,6 +10,8 @@ import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heading from "../../components/Heading";
 import Colors from "../../utils/Colors";
+// import LinearGradient from 'react-native-linear-gradient';
+
 
 export default function BusinessList() {
   const navigation = useNavigation();
@@ -22,16 +24,17 @@ export default function BusinessList() {
   const basicEvents = [
     {
       id: "1",
+      imgSrc: require('../../assets/chefHeaven/images/slider/slide-2.png'),
       category: "basic",
       subCategory: "smallParty",
-      name: "Basic Small Event",
+      name: "Small Event",
       price: "100₹",
-      description: "This is the description for basic small event 1",
+      description: "Content",
       quantity: "Up to 10 people",
       rating: "4.2",
       distance: "2.6 km",
       offer: "Flat 20% OFF",
-      location: "Railway Station Road, Secunderabad",
+      location: "#",
       cost: "₹1400 for two",
       cuisine: "Andhra • Biryani",
     },
@@ -41,16 +44,17 @@ export default function BusinessList() {
   const professionalEvents = [
     {
       id: "2",
+      imgSrc: require('../../assets/chefHeaven/images/slider/slider-3.png'),
       category: "professional",
       subCategory: "smallParty",
-      name: "Professional Small Event",
+      name: "Large Event",
       price: "200₹",
-      description: "This is the description for professional small event 1",
+      description: "Content",
       quantity: "Up to 20 people",
       rating: "4.8",
       distance: "3.0 km",
       offer: "Flat 15% OFF",
-      location: "MG Road, Hyderabad",
+      location: "#",
       cost: "₹2000 for two",
       cuisine: "Hyderabadi • Biryani",
     },
@@ -63,22 +67,33 @@ export default function BusinessList() {
 
   const renderEvent = ({ item }) => (
     <TouchableOpacity
-      style={styles.cardContainer}
-      onPress={() => navigation.navigate("EventDetail", { event: item })}
-    >
-      <View style={styles.cardBgColor} />
-      <View style={styles.cardContent}>
+    style={styles.cardContainer}
+    onPress={() => navigation.navigate("EventDetail", { event: item })}
+  >
+    <Image 
+      source={item.imgSrc} 
+      style={styles.cardImage} 
+    />
+    <View style={styles.cardContent}>
+      <View style={styles.offerSection}>
         <Text style={styles.offerText}>{item.offer} + 3 more</Text>
-        <Text style={styles.cardName}>{item.name}</Text>
-        <Text style={styles.cardLocation}>{item.location}</Text>
-        <View style={styles.cardDetails}>
+      </View>
+      <View style={styles.otherContent}>
+        <View style={styles.row}>
+          <Text style={styles.cardName}>{item.name}</Text>
           <Text style={styles.rating}>{item.rating}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.cardLocation}>{item.location}</Text>
           <Text style={styles.distance}>{item.distance}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.cuisine}>{item.cuisine}</Text>
           <Text style={styles.cost}>{item.cost}</Text>
         </View>
-        <Text style={styles.cuisine}>{item.cuisine}</Text>
       </View>
-    </TouchableOpacity>
+    </View>
+  </TouchableOpacity>
   );
 
   return (
@@ -129,13 +144,13 @@ export default function BusinessList() {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    elevation: 3,
-    boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+    height: 300,
+    borderRadius: 16,
+    overflow: "hidden",
     margin: 10,
-    padding: 10,
-    width: 300, // Adjust the width as needed
+    padding: 0,
+    width: 300,
+    position: 'relative',
   },
   cardBgColor: {
     backgroundColor: "#F5F5F5",
@@ -143,43 +158,72 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-  cardContent: {
-    flex: 1,
-    justifyContent: "space-between",
+  cardImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1,
   },
+  cardContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: "flex-end",
+    borderRadius: 16,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 6,
+    left: 7,
+    width: '95%'
+    
+  },
+  offerSection: {
+    backgroundColor: "rgb(91,81,255)",
+    background: 'linear-gradient(40deg, #2c7df9, #ffffff00)',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    padding: 8,
+  },
+ 
   offerText: {
-    backgroundColor: "#007BFF", // Example color
     color: "#fff",
-    padding: 5,
-    borderRadius: 5,
-    marginBottom: 5,
+    marginBottom: 0,
+  },
+  otherContent: {
+    marginTop: 0,
+    backgroundColor: 'white',
+    padding: 8,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: 2,
   },
   cardName: {
     fontSize: 18,
     fontWeight: "bold",
   },
+  rating: {
+    backgroundColor: "#4CAF50",
+    color: "#fff",
+    padding: 5,
+    borderRadius: 5,
+  },
   cardLocation: {
     color: "#666",
-    marginVertical: 5,
   },
   cardDetails: {
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  rating: {
-    backgroundColor: "#4CAF50", // Example color
-    color: "#fff",
-    padding: 5,
-    borderRadius: 5,
-  },
   distance: {
     color: "#666",
   },
-  cost: {
+  cuisine: {
     color: "#666",
   },
-  cuisine: {
-    marginTop: 10,
+  cost: {
     color: "#666",
   },
   tabContainer: {
@@ -203,6 +247,7 @@ const styles = StyleSheet.create({
   },
   scene: {
     marginTop: 10,
+    
   },
   horizontalList: {
     paddingLeft: 10,

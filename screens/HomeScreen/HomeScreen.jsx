@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Image,
+  Button
 } from "react-native";
 import Header from "./Header";
 import Slider from "./Slider";
@@ -16,7 +17,7 @@ import * as Location from "expo-location";
 import Colors from "../../utils/Colors";
 import Heading from "../../components/Heading";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [city, setCity] = useState(null);
   const [loading, setLoading] = useState(true);
   const [recentOrder, setRecentOrder] = useState(null);
@@ -137,6 +138,19 @@ export default function HomeScreen() {
               </View>
             )}
           </View>
+          <TouchableOpacity
+  onPress={() => navigation.navigate('WelcomeLoginScreen')}
+>
+  <Text>Go to Welcome Login Screen</Text>
+
+</TouchableOpacity>
+
+<TouchableOpacity
+  onPress={() => navigation.navigate('MapForm')}
+>
+  <Text>Go to Welcome Map Details Screen</Text>
+
+</TouchableOpacity>
 
           <View style={styles.section}>
             <BusinessList />

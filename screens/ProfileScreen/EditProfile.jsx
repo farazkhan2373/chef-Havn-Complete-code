@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../utils/Colors";
-import { fetchUserProfile, updateUserProfile } from '../../services/api';
-import Toast from 'react-native-toast-message';
+import { fetchUserProfile, updateUserProfile } from "../../services/api";
+import Toast from "react-native-toast-message";
 
 export default function EditProfile() {
   const [user, setUser] = useState(null);
@@ -22,7 +22,7 @@ export default function EditProfile() {
   });
   const [profileCompletion, setProfileCompletion] = useState(100);
   const [loading, setLoading] = useState(false); // For fetching user
-  const [saving, setSaving] = useState(false);   // For saving user profile
+  const [saving, setSaving] = useState(false); // For saving user profile
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,7 +41,7 @@ export default function EditProfile() {
           const data = await fetchUserProfile(parsedUser.id);
           setProfileCompletion(data.percentage);
         } catch (error) {
-          console.error('Failed to fetch profile completion:', error);
+          console.error("Failed to fetch profile completion:", error);
         }
       }
       setLoading(false);
@@ -74,20 +74,19 @@ export default function EditProfile() {
 
       // Show success message
       Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: 'Success',
-        text2: 'Profile updated successfully.',
+        type: "success",
+        position: "top",
+        text1: "Success",
+        text2: "Profile updated successfully.",
       });
-
     } catch (error) {
-      console.error('Error updating user:', error);
+      console.error("Error updating user:", error);
       // Show error message
       Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Error',
-        text2: 'Failed to update profile. Please try again.',
+        type: "error",
+        position: "top",
+        text1: "Error",
+        text2: "Failed to update profile. Please try again.",
       });
     }
     setSaving(false);
@@ -107,25 +106,34 @@ export default function EditProfile() {
         <ActivityIndicator size="large" color={Colors.primary} />
       ) : (
         user && (
+          <>
           <View style={styles.profileContainer}>
+
+            <View style={styles.profileTopContainer}>
+             <View style={styles.profilePhotoContainer}> 
             <Image
               source={{
                 uri: user.profilePicUrl || "https://via.placeholder.com/150",
               }}
               style={styles.profilePic}
             />
-            <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Name:</Text>
-              <TextInput
-                style={styles.input}
-                value={editableUser.displayName}
-                onChangeText={(text) =>
-                  setEditableUser({ ...editableUser, displayName: text })
-                }
-              />
+            <TouchableOpacity style={styles.changePhotoButton}>
+              <Text style={styles.changePhotoText}>Change photo</Text>
+            </TouchableOpacity>
             </View>
+
+            <View style={styles.userDetailContainer}>
+            <Text style={styles.userName}>{editableUser.displayName}</Text>
+            <Text style={styles.userEmailText}>{editableUser.email}</Text>
+            </View>
+
+            </View>
+            </View>
+         
+           <View style={styles.profileInputFields}>
+
             <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.label}>Email Address</Text>
               <TextInput
                 style={styles.input}
                 value={editableUser.email}
@@ -135,7 +143,18 @@ export default function EditProfile() {
               />
             </View>
             <View style={styles.fieldContainer}>
-              <Text style={styles.label}>Phone:</Text>
+              <Text style={styles.label}>Username</Text>
+              <TextInput
+                style={styles.input}
+                value={editableUser.displayName}
+                onChangeText={(text) =>
+                  setEditableUser({ ...editableUser, displayName: text })
+                }
+              />
+            </View>
+            
+            <View style={styles.fieldContainer}>
+              <Text style={styles.label}>Mobile Number</Text>
               <TextInput
                 style={styles.input}
                 value={editableUser.phone}
@@ -151,10 +170,11 @@ export default function EditProfile() {
                 <Text style={styles.saveButtonText}>Save</Text>
               )}
             </TouchableOpacity>
-          </View>
+            </View>
+         
+          </>
         )
       )}
-      <Toast />
     </View>
   );
 }
@@ -162,67 +182,124 @@ export default function EditProfile() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: Colors.WHITE,
   },
+  profileTopContainer: {
+  backgroundColor: "#f8f8f8",
+  flexDirection: "row", 
+  gap: 30,
+  padding: 20, 
+
+},
+
+  profileInputFields: {
+  backgroundColor: 'white',
+  paddingHorizontal: 30,
+  paddingVertical: 30,
+  },
+
+  
+  
   header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    marginTop: 35,
-    color: Colors.primary,
-    textAlign: "center",
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+    textAlign: 'center',
+    paddingVertical: 10,
+    backgroundColor: "#f8f8f8"
   },
   warningStrip: {
-    backgroundColor: Colors.warning,
+    backgroundColor: '#ffcc00',
     padding: 10,
-    marginBottom: 20,
+    borderRadius: 10,
+    marginBottom: 10,
   },
   warningText: {
-    color: Colors.white,
-    textAlign: "center",
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 14,
   },
   profileContainer: {
-    alignItems: "center",
+    // alignItems: 'center',
+  },
+  profilePhotoContainer:{
+
+  },
+  userDetailContainer:{
   },
   profilePic: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    marginBottom: 10,
+  },
+  changePhotoButton: {
+    marginBottom: 10,
+  },
+  changePhotoText: {
+    color: '#0066cc',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 5,
+  },
+  userEmailText: {
+    fontSize: 14,
+    color: '#888',
+    marginBottom: 10,
+  },
+  deleteButton: {
+    backgroundColor: '#ff4d4d',
+    padding: 8,
+    borderRadius: 5,
     marginBottom: 20,
+    width: "58px",
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   fieldContainer: {
-    width: "100%",
-    marginBottom: 20,
+    width: '100%',
+    marginBottom: 15,
   },
   label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.DARK_GRAY,
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#555',
     marginBottom: 5,
   },
   input: {
     fontSize: 16,
-    color: Colors.DARK_GRAY,
+    color: '#000',
+    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: Colors.LIGHT_GRAY,
+    borderColor: '#ddd',
     borderRadius: 5,
     padding: 10,
-    width: "100%",
+    width: '100%',
   },
   saveButton: {
     backgroundColor: Colors.PRIMARY,
     padding: 15,
     borderRadius: 5,
-    alignItems: "center",
-    marginTop: 20,
-    width: "100%",
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90%', // You can adjust the width if needed
+    position: "fixed",
+    bottom: "8px",
+    left: 0,
+    right: 0,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+
   },
   saveButtonText: {
-    color: Colors.WHITE,
+    color: '#fff',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: '600',
   },
 });

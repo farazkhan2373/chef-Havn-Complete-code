@@ -13,6 +13,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import Colors from "../../utils/Colors";
 import { Picker } from "@react-native-picker/picker";
+// import Svg, { Path } from 'react-native-svg';
 
 const EventDetail = ({ route }) => {
   const navigation = useNavigation();
@@ -25,6 +26,7 @@ const EventDetail = ({ route }) => {
   const [mode, setMode] = useState("date");
   const [price, setPrice] = useState("");
   const [selectedType, setSelectedType] = useState("Veg");
+  const [selectedEventType, setSelectedEventType] = useState("Basic");
 
   const priceBreakup = {
     2: { basicCookPrice: 599, professionalPrice: 899 },
@@ -90,7 +92,9 @@ const EventDetail = ({ route }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Image source={event.image} style={styles.image} />
+      <View>
+        <Image source={event.imgSrc} style={styles.image} />
+      </View>
       <View style={styles.content}>
         <Text style={styles.name}>{event.name}</Text>
         {numberOfHours > 0 && (
@@ -110,68 +114,81 @@ const EventDetail = ({ route }) => {
         )}
         <Text style={styles.description}>{event.description}</Text>
 
-        {/* Step 1: Number of Hours and Number of People */}
-        <Text style={styles.inputLabel}>Number of Hours:</Text>
-        <View style={styles.pickerContainer}>
+        <View style={styles.eventTypeContainer}>
+          <Text style={styles.eventLabel}>Event Type:</Text>
+
           <Picker
-            selectedValue={numberOfHours}
-            style={styles.picker}
-            onValueChange={(itemValue) => setNumberOfHours(itemValue)}
+            selectedValue={selectedEventType}
+            style={styles.eventTypePicker}
+            onValueChange={(itemValue) => setSelectedEventType(itemValue)}
           >
-            <Picker.Item label="Select hours" value="" />
-            {Array.from({ length: 9 }, (_, i) => i + 2).map((hour) => (
-              <Picker.Item
-                key={hour}
-                label={`${hour} hours`}
-                value={`${hour}`}
-              />
-            ))}
+            <Picker.Item label="Basic" value="basic" />
+            <Picker.Item label="Professional" value="professional" />
           </Picker>
         </View>
 
-        <Text style={styles.inputLabel}>Number of People:</Text>
-        <TextInput
-          style={styles.input}
-          value={numberOfPeople}
-          onChangeText={setNumberOfPeople}
-          keyboardType="numeric"
-          placeholder="Enter number of people"
-        />
+        {/* Step 1: Number of Hours and Number of People */}
+        <View style={styles.hoursPeople}>
+          <View>
+            <Text style={styles.inputLabel}>Number of Hours:</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={numberOfHours}
+                style={styles.picker}
+                onValueChange={(itemValue) => setNumberOfHours(itemValue)}
+              >
+                <Picker.Item label="Select hours" value="" />
+                {Array.from({ length: 9 }, (_, i) => i + 2).map((hour) => (
+                  <Picker.Item
+                    key={hour}
+                    label={`${hour} hours`}
+                    value={`${hour}`}
+                  />
+                ))}
+              </Picker>
+            </View>
+          </View>
+
+          <View>
+            <Text style={styles.inputLabel}>Number of People:</Text>
+            <TextInput
+              style={styles.input}
+              value={numberOfPeople}
+              onChangeText={setNumberOfPeople}
+              keyboardType="numeric"
+              placeholder="Enter number of people"
+            />
+          </View>
+        </View>
 
         {/* Step 2: Number of Dishes and Type (visible after selecting hours and people) */}
         {numberOfHours && numberOfPeople ? (
-          <>
-            <Text style={styles.inputLabel}>Number of Dishes:</Text>
-            <TextInput
-              style={styles.input}
-              value={guestQuantity}
-              onChangeText={setGuestQuantity}
-              keyboardType="numeric"
-              placeholder="Enter number of dishes"
-            />
-
-            <Text style={styles.inputLabel}>Type:</Text>
-            <View style={styles.typeContainer}>
-              <TouchableOpacity
-                style={[
-                  styles.typeOption,
-                  selectedType === "Veg" && styles.selectedTypeOption,
-                ]}
-                onPress={() => setSelectedType("Veg")}
-              >
-                <Text style={styles.typeText}>Veg</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  styles.typeOption,
-                  selectedType === "Non-Veg" && styles.selectedTypeOption,
-                ]}
-                onPress={() => setSelectedType("Non-Veg")}
-              >
-                <Text style={styles.typeText}>Non-Veg</Text>
-              </TouchableOpacity>
+          <View style={styles.dishesType}>
+            <View>
+              <Text style={styles.inputLabel}>Number of Dishes:</Text>
+              <TextInput
+                style={styles.input}
+                value={guestQuantity}
+                onChangeText={setGuestQuantity}
+                keyboardType="numeric"
+                placeholder="Enter number of dishes"
+              />
             </View>
-          </>
+
+            <View>
+              <Text style={styles.inputLabel}>Type:</Text>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={selectedType}
+                  style={styles.picker}
+                  onValueChange={(itemValue) => setSelectedType(itemValue)}
+                >
+                  <Picker.Item label="Veg" value="Veg" />
+                  <Picker.Item label="Non-Veg" value="Non-Veg" />
+                </Picker>
+              </View>
+            </View>
+          </View>
         ) : null}
 
         {/* Step 3: Date and Time (visible after selecting dishes and type) */}
@@ -236,7 +253,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: 200,
+    height: 300,
     resizeMode: "cover",
   },
   content: {
@@ -259,8 +276,52 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
+  eventTypeContainer: {
+   
+  },
+  eventLabel: {
+    fontSize: 16,
+    marginBottom: 8,
+    fontWeight: 'bold',
+    
+  },
+  pickerWrapper: {
+    borderWidth: 1,
+    borderColor: "#503a73", // Primary color
+    borderRadius: 8,
+    overflow: "hidden",
+    backgroundColor: "#f3f1f7",
+    shadowColor: "#503a73",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  eventTypePicker: {
+    height: 50,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.PRIMARY,
+    outlineWidth: 1,
+    outlineColor: Colors.PRIMARY,
+    width: "100%",
+    fontWeight: "bold",
+    paddingRight: 20, // Add padding to create space for the dropdown arrow
+  },
+  hoursPeople: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 30,
+    
+  },
+  dishesType: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 30,
+  },
   inputLabel: {
     fontSize: 16,
+    fontWeight: 'bold',
     marginTop: 20,
     marginBottom: 10,
   },
