@@ -8,14 +8,14 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-
+ 
 const OtpScreen = ({ navigation, route }) => {
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const { generatedOtp, onOtpVerified } = route.params;
   const inputRefs = useRef([]);
   const [selectedInput, setSelectedInput] = useState(null);
-
+ 
   const handleOtpChange = (value, index) => {
     const newOtp = [...otp];
     newOtp[index] = value;
@@ -24,7 +24,7 @@ const OtpScreen = ({ navigation, route }) => {
       inputRefs.current[index + 1].focus();
     }
   };
-
+ 
   const handleOtpVerification = () => {
     const enteredOtp = otp.join("");
     if (enteredOtp === generatedOtp) {
@@ -33,7 +33,7 @@ const OtpScreen = ({ navigation, route }) => {
       Alert.alert("OTP Verification Failed", "Invalid OTP");
     }
   };
-
+ 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Enter Confirmation Code</Text>
@@ -77,7 +77,7 @@ const OtpScreen = ({ navigation, route }) => {
     </View>
   );
 };
-
+ 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -139,5 +139,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
+ 
 export default OtpScreen;
+ 
+ 

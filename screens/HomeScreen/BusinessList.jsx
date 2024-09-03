@@ -149,8 +149,11 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     margin: 10,
     padding: 0,
-    width: 300,
+    width: 400,
+    // margin: 'auto',
+    marginHorizontal: '15%',
     position: 'relative',
+    
   },
   cardBgColor: {
     backgroundColor: "#F5F5F5",
@@ -251,5 +254,6 @@ const styles = StyleSheet.create({
   },
   horizontalList: {
     paddingLeft: 10,
+
   },
 });

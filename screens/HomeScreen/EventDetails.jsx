@@ -129,7 +129,8 @@ const EventDetail = ({ route }) => {
 
         {/* Step 1: Number of Hours and Number of People */}
         <View style={styles.hoursPeople}>
-          <View>
+
+          <View style={styles.hours}>
             <Text style={styles.inputLabel}>Number of Hours:</Text>
             <View style={styles.pickerContainer}>
               <Picker
@@ -149,7 +150,7 @@ const EventDetail = ({ route }) => {
             </View>
           </View>
 
-          <View>
+          <View style={styles.people}>
             <Text style={styles.inputLabel}>Number of People:</Text>
             <TextInput
               style={styles.input}
@@ -159,12 +160,13 @@ const EventDetail = ({ route }) => {
               placeholder="Enter number of people"
             />
           </View>
+
         </View>
 
         {/* Step 2: Number of Dishes and Type (visible after selecting hours and people) */}
         {numberOfHours && numberOfPeople ? (
           <View style={styles.dishesType}>
-            <View>
+            <View style={styles.dishes}>
               <Text style={styles.inputLabel}>Number of Dishes:</Text>
               <TextInput
                 style={styles.input}
@@ -175,7 +177,7 @@ const EventDetail = ({ route }) => {
               />
             </View>
 
-            <View>
+            <View style={styles.type}>
               <Text style={styles.inputLabel}>Type:</Text>
               <View style={styles.pickerContainer}>
                 <Picker
@@ -314,10 +316,24 @@ const styles = StyleSheet.create({
     gap: 30,
     
   },
+  hours: {
+    
+    flexGrow: 1,
+  },
+  people: {
+    
+    flexGrow: 1,
+  },
   dishesType: {
     display: "flex",
     flexDirection: "row",
     gap: 30,
+  },
+  dishes: {
+    flexGrow: 1,
+  },
+  type:{
+    flexGrow: 1,
   },
   inputLabel: {
     fontSize: 16,
